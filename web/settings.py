@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'asset_management',
     # 在此注册各模块的app
 ]
 
@@ -77,8 +78,11 @@ WSGI_APPLICATION = 'web.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'AssetManagement',
+        'USER': 'root',
+        'PASSWORD': '12345',
+        'HOST': '127.0.0.1',
     }
 }
 

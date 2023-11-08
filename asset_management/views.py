@@ -12,12 +12,13 @@ from asset_management.models import Workshop, Productionline, Asset, AssetServic
 def add_workshop(request):
     response = {}
     try:
-        workshop_id = request.GET.get('workshop_id')
+        # workshop_id = request.GET.get('workshop_id')
         workshop_name = request.GET.get('workshop_name')
         workshop_shortened = request.GET.get('workshop_shortened')
         workshop_productionline_number = request.GET.get('workshop_productionline_number')
-
-        workshop = Workshop(id=workshop_id, name=workshop_name, shortened=workshop_shortened, productionline_number=workshop_productionline_number)
+        workshop = Workshop(name=workshop_name,
+                            shortened=workshop_shortened,
+                            productionline_number=workshop_productionline_number)
         workshop.save()
         response['respMsg'] = 'success'
         response['respCode'] = '000000'

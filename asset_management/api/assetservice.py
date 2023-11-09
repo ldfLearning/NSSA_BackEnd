@@ -17,3 +17,22 @@ class AssetServiceBasicView(APIView):
             return Response(assetservice_toadd.errors)
         assetservice_toadd.save()
         return Response(assetservice_toadd.data)
+
+
+class AssetServiceToolView(APIView):
+    def get(self, request, pk):
+        workshop_chosen = AssetService.objects.get(pk=pk)
+        ser = AssetServiceSerializer(instance=workshop_chosen)
+        return Response(ser.data)
+
+    def put(self, request, pk):
+        workshop_chosen = AssetService.objects.get(pk=pk)
+        ser = AssetServiceSerializer(instance=workshop_chosen, data=request.data)
+        if not ser.is_valid():
+            return Response(ser.errors)
+        ser.save()
+        return Response(ser.data)
+
+    def delete(self, request, pk):
+        AssetService.objects.get(pk=pk).delete()
+        return Response({'detail': '删除成功！！'})

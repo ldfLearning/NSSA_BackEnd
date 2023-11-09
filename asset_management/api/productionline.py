@@ -17,3 +17,22 @@ class ProductionlineBasicView(APIView):
             return Response(productionline_toadd.errors)
         productionline_toadd.save()
         return Response(productionline_toadd.data)
+
+
+class ProductionlineToolView(APIView):
+    def get(self, request, pk):
+        workshop_chosen = Productionline.objects.get(pk=pk)
+        ser = ProductionlineSerializer(instance=workshop_chosen)
+        return Response(ser.data)
+
+    def put(self, request, pk):
+        workshop_chosen = Productionline.objects.get(pk=pk)
+        ser = ProductionlineSerializer(instance=workshop_chosen, data=request.data)
+        if not ser.is_valid():
+            return Response(ser.errors)
+        ser.save()
+        return Response(ser.data)
+
+    def delete(self, request, pk):
+        Productionline.objects.get(pk=pk).delete()
+        return Response({'detail': '删除成功！！'})

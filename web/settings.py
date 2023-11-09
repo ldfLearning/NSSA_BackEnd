@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 在此注册各模块的app
+    'risk'
 ]
 
 MIDDLEWARE = [

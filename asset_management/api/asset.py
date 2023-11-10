@@ -18,21 +18,18 @@ class AssetBasicView(APIView):
         asset_toadd.save()
         return Response(asset_toadd.data)
 
-
-class AssetToolView(APIView):
-    def get(self, request, pk):
-        workshop_chosen = Asset.objects.get(pk=pk)
-        ser = AssetSerializer(instance=workshop_chosen)
-        return Response(ser.data)
-
-    def put(self, request, pk):
-        workshop_chosen = Asset.objects.get(pk=pk)
+    def put(self, request):
+        query = request.query_params.dict()
+        pick = int(query['pk'])
+        workshop_chosen = Asset.objects.get(pk=pick)
         ser = AssetSerializer(instance=workshop_chosen, data=request.data)
         if not ser.is_valid():
             return Response(ser.errors)
         ser.save()
         return Response(ser.data)
 
-    def delete(self, request, pk):
-        Asset.objects.get(pk=pk).delete()
-        return Response({'detail': '删除成功！！'})
+    def delete(self, request):
+        query = request.query_params.dict()
+        pick = int(query['deletenum'])
+        Asset.objects.get(pk=pick).delete()
+        return Response({'detail': 'Deleted successfully!'})

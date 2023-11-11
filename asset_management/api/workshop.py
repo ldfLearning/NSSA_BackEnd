@@ -1,5 +1,4 @@
 # from rest_framework.viewsets import ModelViewSet
-from django.db.models import QuerySet
 from rest_framework.views import APIView
 from asset_management.models import Workshop
 from asset_management.serializers import WorkshopSerializer
@@ -7,6 +6,7 @@ from rest_framework.response import Response
 
 
 class WorkshopBasicView(APIView):
+
     def get(self, request):
         query = request.query_params.dict()
         page = int(query['page'])
@@ -15,18 +15,13 @@ class WorkshopBasicView(APIView):
         resall = Workshop.objects.all()
         reschosen = []
         for i in resall:
-            # print(i)
-            # print(content)
-            # print(str(i.id))
-            # print(str(i.id).find(content))
-            # if (str(i.id).find(content)!=-1):
             if ((str(i.id).find(content)!=-1) or (i.name.find(content)!=-1) or (i.shortened.find(content)!=-1) or (str(i.productionline_number).find(content)!=-1)):
                 reschosen.append(i)
-        print(reschosen)
         # print(res[0].id, res[0].name, res[0].shortened, res[0].productionline_number)
         # print(res[1].id, res[1].name, res[1].shortened, res[1].productionline_number)
-        res = resall[(page - 1) * pageSize : page * pageSize]
-        ser = WorkshopSerializer(instance=reschosen, many=True)
+        res = reschosen[(page - 1) * pageSize : page * pageSize]
+        print(res)
+        ser = WorkshopSerializer(instance=res, many=True)
         return Response(ser.data)
 
     def post(self, request):

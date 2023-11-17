@@ -2,8 +2,8 @@ import nmap
 import threading
 import time
 
-from nmap_alive import scanNetwork
-from singleScan import singleScan
+from asset_management.scan.nmap_alive import scanNetwork
+from asset_management.scan.singleScan import singleScan
 
 
 class myThread(threading.Thread):
@@ -44,7 +44,6 @@ def multiScan(network, arguments = '-sV -O -T4'):
         if info != {}:  # info不为空，当前主机是存活状态，入表，否则当前主机不是存活状态
             infos.append(info)
     print(f"扫描完成，得到{len(infos)}条主机信息，退出主线程")
-    # print(infos)
     return infos
 
 

@@ -60,7 +60,7 @@ class AssetScan(APIView):
 
         try:
             asset_list = Asset.objects.all()
-            asset_listv = json.loads(serializers.serialize("json", asset_list))
+            asset_list = json.loads(serializers.serialize("json", asset_list))
             res['data'] = asset_list
         except Exception as e:
             res['code'] = -1

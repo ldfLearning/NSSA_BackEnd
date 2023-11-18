@@ -20,10 +20,13 @@ class ProductionlineBasicView(APIView):
                     or (i.shortened.find(content) != -1)
                     or (str(i.asset_number).find(content) != -1)):
                 reschosen.append(i)
-        res = reschosen[(page - 1) * pageSize: page * pageSize]
-        print(res)
-        ser = ProductionlineSerializer(instance=res, many=True)
-        return Response(ser.data)
+        resdata = reschosen[(page - 1) * pageSize: page * pageSize]
+        print(resdata)
+        ser = ProductionlineSerializer(instance=resdata, many=True)
+        total = len(reschosen)
+        totalPage = total // pageSize + 1
+        res = {'total': total, 'totalPage': totalPage, 'nowPage': page, 'data': ser.data}
+        return Response(res)
 
     def post(self, request):
         productionline_toadd = ProductionlineSerializer(data=request.data)

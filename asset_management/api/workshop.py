@@ -25,7 +25,7 @@ class WorkshopBasicView(APIView):
         ser = WorkshopSerializer(instance=resdata, many=True)
         total = len(reschosen)
         totalPage = total // pageSize + 1
-        res = {'total': total, 'totalPage': totalPage, 'data': ser.data}
+        res = {'total': total, 'totalPage': totalPage, 'nowPage': page, 'data': ser.data}
         return Response(res)
 
     def post(self, request):

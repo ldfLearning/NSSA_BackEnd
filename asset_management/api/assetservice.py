@@ -26,9 +26,12 @@ class AssetServiceBasicView(APIView):
                     or (i.extrainfo.find(content) != -1)
                     or (i.update_time.find(content) != -1)):
                 reschosen.append(i)
-        res = reschosen[(page - 1) * pageSize: page * pageSize]
-        print(res)
-        ser = AssetServiceSerializer(instance=res, many=True)
+        resdata = reschosen[(page - 1) * pageSize: page * pageSize]
+        print(resdata)
+        ser = AssetServiceSerializer(instance=resdata, many=True)
+        total = len(reschosen)
+        totalPage = total // pageSize + 1
+        res = {'total': total, 'totalPage': totalPage, 'nowPage': page, 'data': ser.data}
         return Response(ser.data)
 
     def post(self, request):

@@ -30,10 +30,13 @@ class AssetBasicView(APIView):
                     or (i.update_time.find(content) != -1)
                     or (str(i.productionline_id).find(content) != -1)):
                 reschosen.append(i)
-        res = reschosen[(page - 1) * pageSize: page * pageSize]
-        print(res)
-        ser = AssetSerializer(instance=res, many=True)
-        return Response(ser.data)
+        resdata = reschosen[(page - 1) * pageSize: page * pageSize]
+        print(resdata)
+        ser = AssetSerializer(instance=resdata, many=True)
+        total = len(reschosen)
+        totalPage = total // pageSize + 1
+        res = {'total': total, 'totalPage': totalPage, 'nowPage': page, 'data': ser.data}
+        return Response(res)
 
     def post(self, request):
         asset_toadd = AssetSerializer(data=request.data)

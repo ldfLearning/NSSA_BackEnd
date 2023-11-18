@@ -58,7 +58,7 @@ class AssetScan(APIView):
 def addToDB(info):  # 分析单机扫描的结果，将主机信息和主机服务信息添加进数据库
     qs = Asset.objects.filter(ip=info['ip'])  # 在数据库中查找对应ip的主机
     if len(qs) == 0:  # 如果不存在,则直接插入
-        h1 = Asset(ip=info['ip'], asset_name=info['hostname'], device_vendor=info['vendor'], device_type=info['type'],
+        h1 = Asset(ip=info['ip'], name=info['hostname'], device_vendor=info['vendor'], device_type=info['type'],
                    os=info['os'], mac=info['mac'], update_time=info['update_time'])
         h1.save()
     else:  # 如果已经存在,则更新字段值

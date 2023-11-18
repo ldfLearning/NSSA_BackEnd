@@ -36,9 +36,7 @@ class AssetBasicView(APIView):
         return Response(ser.data)
 
     def post(self, request):
-        print("Request.data : ", request.data)
         asset_toadd = AssetSerializer(data=request.data)
-        print("Asset_toadd : ", asset_toadd)
         if not asset_toadd.is_valid():
             return Response(asset_toadd.errors)
         asset_toadd.save()
@@ -46,7 +44,7 @@ class AssetBasicView(APIView):
 
     def put(self, request):
         query = request.query_params.dict()
-        pick = int(query['pk'])
+        pick = int(query['alternum'])
         asset_chosen = Asset.objects.get(pk=pick)
         ser = AssetSerializer(instance=asset_chosen, data=request.data)
         if not ser.is_valid():

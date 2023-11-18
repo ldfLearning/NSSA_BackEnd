@@ -32,14 +32,18 @@ class ProductionlineBasicView(APIView):
         productionline_toadd.save()
         return Response(productionline_toadd.data)
 
-    def put(self, request, pk):
-        productionline_chosen = Productionline.objects.get(pk=pk)
+    def put(self, request):
+        query = request.query_params.dict()
+        pick = int(query['alternum'])
+        productionline_chosen = Productionline.objects.get(pk=pick)
         ser = ProductionlineSerializer(instance=productionline_chosen, data=request.data)
         if not ser.is_valid():
             return Response(ser.errors)
         ser.save()
         return Response(ser.data)
 
-    def delete(self, request, pk):
-        Productionline.objects.get(pk=pk).delete()
+    def delete(self, request):
+        query = request.query_params.dict()
+        pick = int(query['deletenum'])
+        Productionline.objects.get(pk=pick).delete()
         return Response({'detail': 'Deleted successfully!'})

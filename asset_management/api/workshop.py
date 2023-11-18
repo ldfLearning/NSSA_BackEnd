@@ -20,7 +20,7 @@ class WorkshopBasicView(APIView):
                     or (i.shortened.find(content) != -1)
                     or (str(i.productionline_number).find(content) != -1)):
                 reschosen.append(i)
-        res = reschosen[(page - 1) * pageSize : page * pageSize]
+        res = reschosen[(page - 1) * pageSize: page * pageSize]
         print(res)
         ser = WorkshopSerializer(instance=res, many=True)
         return Response(ser.data)

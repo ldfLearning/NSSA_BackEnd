@@ -38,14 +38,18 @@ class AssetServiceBasicView(APIView):
         assetservice_toadd.save()
         return Response(assetservice_toadd.data)
 
-    def put(self, request, pk):
-        assetservice_chosen = AssetService.objects.get(pk=pk)
+    def put(self, request):
+        query = request.query_params.dict()
+        pick = int(query['alternum'])
+        assetservice_chosen = AssetService.objects.get(pk=pick)
         ser = AssetServiceSerializer(instance=assetservice_chosen, data=request.data)
         if not ser.is_valid():
             return Response(ser.errors)
         ser.save()
         return Response(ser.data)
 
-    def delete(self, request, pk):
-        AssetService.objects.get(pk=pk).delete()
+    def delete(self, request):
+        query = request.query_params.dict()
+        pick = int(query['deletenum'])
+        AssetService.objects.get(pk=pick).delete()
         return Response({'detail': 'Deleted successfully!'})

@@ -15,10 +15,11 @@ class WorkshopBasicView(APIView):
         resall = Workshop.objects.all()
         reschosen = []
         for i in resall:
-            if ((str(i.id).find(content)!=-1) or (i.name.find(content)!=-1) or (i.shortened.find(content)!=-1) or (str(i.productionline_number).find(content)!=-1)):
+            if ((str(i.id).find(content) != -1)
+                    or (i.name.find(content) != -1)
+                    or (i.shortened.find(content) != -1)
+                    or (str(i.productionline_number).find(content) != -1)):
                 reschosen.append(i)
-        # print(res[0].id, res[0].name, res[0].shortened, res[0].productionline_number)
-        # print(res[1].id, res[1].name, res[1].shortened, res[1].productionline_number)
         res = reschosen[(page - 1) * pageSize : page * pageSize]
         print(res)
         ser = WorkshopSerializer(instance=res, many=True)

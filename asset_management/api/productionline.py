@@ -7,7 +7,21 @@ from rest_framework.response import Response
 
 class ProductionlineBasicView(APIView):
     def get(self, request):
-        res = Productionline.objects.all()
+        query = request.query_params.dict()
+        page = int(query['page'])
+        pageSize = int(query['pageSize'])
+        content = str(query['content'])
+        resall = Productionline.objects.all()
+        reschosen = []
+        for i in resall:
+            if ((str(i.id).find(content) != -1)
+                    or (i.name.find(content) != -1)
+                    or (str(i.workshop_id).find(content) != -1)
+                    or (i.shortened.find(content) != -1)
+                    or (str(i.asset_number).find(content) != -1)):
+                reschosen.append(i)
+        res = reschosen[(page - 1) * pageSize: page * pageSize]
+        print(res)
         ser = ProductionlineSerializer(instance=res, many=True)
         return Response(ser.data)
 
@@ -19,8 +33,8 @@ class ProductionlineBasicView(APIView):
         return Response(productionline_toadd.data)
 
     def put(self, request, pk):
-        workshop_chosen = Productionline.objects.get(pk=pk)
-        ser = ProductionlineSerializer(instance=workshop_chosen, data=request.data)
+        productionline_chosen = Productionline.objects.get(pk=pk)
+        ser = ProductionlineSerializer(instance=productionline_chosen, data=request.data)
         if not ser.is_valid():
             return Response(ser.errors)
         ser.save()

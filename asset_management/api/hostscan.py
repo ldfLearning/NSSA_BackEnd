@@ -45,19 +45,6 @@ class AssetScan(APIView):
             res['code'] = -1
             res['msg'] = '扫描信息入库失败'
             return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        # print(host_toscan)
-        # host_got = scanNetwork(host_toscan)
-        # print(host_got)
-        # for i in host_got:
-        #     single_host = {}
-        #     single_host["ip"] = i
-        #     host_toadd = AssetSerializer(data=single_host)
-        #     if not host_toadd.is_valid():
-        #         return Response(host_toadd.errors)
-        #     host_toadd.save()
-        # return Response(host_got)
-
         try:
             asset_list = Asset.objects.all()
             asset_list = json.loads(serializers.serialize("json", asset_list))

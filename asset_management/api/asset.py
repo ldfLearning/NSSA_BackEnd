@@ -2,12 +2,36 @@ from rest_framework.views import APIView
 from asset_management.models import Asset
 from asset_management.serializers import AssetSerializer
 from rest_framework.response import Response
-from asset_management.scan import nmap_alive
 
 class AssetBasicView(APIView):
 
     def get(self, request):
-        res = Asset.objects.all()
+        query = request.query_params.dict()
+        page = int(query['page'])
+        pageSize = int(query['pageSize'])
+        content = str(query['content'])
+        resall = Asset.objects.all()
+        reschosen = []
+        for i in resall:
+            if ((str(i.id).find(content) != -1)
+                    or (i.ip.find(content) != -1)
+                    or (i.name.find(content) != -1)
+                    or (i.position.find(content) != -1)
+                    or (i.device_sn.find(content) != -1)
+                    or (i.device_vendor.find(content) != -1)
+                    or (i.device_type.find(content) != -1)
+                    or (i.device_working_hours.find(content) != -1)
+                    or (str(i.cpu_used).find(content) != -1)
+                    or (str(i.remain_mem).find(content) != -1)
+                    or (str(i.remain_harddisk).find(content) != -1)
+                    or (str(i.network_speed).find(content) != -1)
+                    or (i.os.find(content) != -1)
+                    or (i.mac.find(content) != -1)
+                    or (i.update_time.find(content) != -1)
+                    or (str(i.productionline_id).find(content) != -1)):
+                reschosen.append(i)
+        res = reschosen[(page - 1) * pageSize: page * pageSize]
+        print(res)
         ser = AssetSerializer(instance=res, many=True)
         return Response(ser.data)
 
@@ -23,8 +47,8 @@ class AssetBasicView(APIView):
     def put(self, request):
         query = request.query_params.dict()
         pick = int(query['pk'])
-        workshop_chosen = Asset.objects.get(pk=pick)
-        ser = AssetSerializer(instance=workshop_chosen, data=request.data)
+        asset_chosen = Asset.objects.get(pk=pick)
+        ser = AssetSerializer(instance=asset_chosen, data=request.data)
         if not ser.is_valid():
             return Response(ser.errors)
         ser.save()

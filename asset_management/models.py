@@ -23,7 +23,7 @@ class Productionline(models.Model):
 class Asset(models.Model):
     id = models.AutoField(primary_key=True)  # 自增主键
     ip = models.CharField(max_length=20)  # 资产IP
-    asset_name = models.CharField(max_length=100, default='')  # 资产名称
+    name = models.CharField(max_length=100, default='')  # 资产名称
     position = models.CharField(max_length=100, default='')  # 位置
     device_sn = models.CharField(max_length=100, default='')  # 设备SN
     device_vendor = models.CharField(max_length=100, default='')  # 设备厂商
@@ -48,8 +48,8 @@ class AssetService(models.Model):
     asset_id = models.IntegerField(default=0)  # 资产id
     ip = models.CharField(max_length=20)  # 资产IP
     port = models.IntegerField()  # 端口
-    state = models.CharField(max_length=10, default='')  # 状态
     name = models.CharField(max_length=45, default='')  # 服务名称
+    state = models.CharField(max_length=10, default='')  # 状态
     product = models.CharField(max_length=45, default='')  # 产品
     version = models.CharField(max_length=45, default='')  # 版本
     cpe = models.CharField(max_length=100, default='')  # 通用平台枚举项

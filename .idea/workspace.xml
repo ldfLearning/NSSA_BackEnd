@@ -5,21 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2cb8ada9-82dd-425c-9c69-2451d68f8092" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset_management/api/assetfile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset_management/api/productionlinefile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset_management/api/workshopfile.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset_management/file.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/NSSA_BackEnd.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/NSSA_BackEnd.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/asset_management/api/asset.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/asset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/asset_management/api/hostscan.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/hostscan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/api/productionline.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/productionline.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/asset_management/api/workshop.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/workshop.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/asset_management/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/asset_management/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/asset_management/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,23 +42,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Asset-Management",
-    "last_opened_file_path": "D:/User/Desktop/NSSA_BackEnd",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "http.proxy",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Asset-Management&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/User/Desktop/NSSA_BackEnd&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;http.proxy&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="NSSA_BackEnd" type="Python.DjangoServer" factoryName="Django server">
       <module name="NSSA_BackEnd" />
@@ -113,7 +102,8 @@
       <workItem from="1700323499395" duration="153000" />
       <workItem from="1700323697120" duration="734000" />
       <workItem from="1700397106846" duration="58000" />
-      <workItem from="1700397730653" duration="3503000" />
+      <workItem from="1700397730653" duration="4019000" />
+      <workItem from="1700408635219" duration="1234000" />
     </task>
     <servers />
   </component>

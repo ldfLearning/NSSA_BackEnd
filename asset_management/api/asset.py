@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from asset_management.models import Asset
+from asset_management.models import *
 from asset_management.serializers import AssetSerializer
 from rest_framework.response import Response
 
@@ -60,4 +60,8 @@ class AssetBasicView(APIView):
         query = request.query_params.dict()
         pick = int(query['deletenum'])
         Asset.objects.get(pk=pick).delete()
+        serviceList = AssetService.objects.filter(asset_id=pick)
+        print(serviceList)
+        for service in serviceList:
+            service.delete()
         return Response({'detail': 'Deleted successfully!'})

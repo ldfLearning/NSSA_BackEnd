@@ -1,6 +1,6 @@
 # from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
-from asset_management.models import Productionline
+from asset_management.models import *
 from asset_management.serializers import ProductionlineSerializer
 from rest_framework.response import Response
 
@@ -49,4 +49,8 @@ class ProductionlineBasicView(APIView):
         query = request.query_params.dict()
         pick = int(query['deletenum'])
         Productionline.objects.get(pk=pick).delete()
+        assetList = Asset.objects.filter(productionline_id=pick)
+        for asset in assetList:
+            asset.productionline_id = 0
+            asset.save()
         return Response({'detail': 'Deleted successfully!'})

@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from asset_management.models import Workshop
+from asset_management.models import *
 from asset_management.serializers import WorkshopSerializer
 from rest_framework.response import Response
 
@@ -48,4 +48,8 @@ class WorkshopBasicView(APIView):
         query = request.query_params.dict()
         pick = int(query['deletenum'])
         Workshop.objects.get(pk=pick).delete()
+        productionlineList = Productionline.objects.filter(workshop_id=pick)
+        for productionline in productionlineList:
+            productionline.workshop_id = 0
+            productionline.save()
         return Response({'detail': 'Deleted successfully!'})

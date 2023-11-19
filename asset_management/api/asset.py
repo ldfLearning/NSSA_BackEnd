@@ -3,6 +3,7 @@ from asset_management.models import Asset
 from asset_management.serializers import AssetSerializer
 from rest_framework.response import Response
 
+
 class AssetBasicView(APIView):
 
     def get(self, request):

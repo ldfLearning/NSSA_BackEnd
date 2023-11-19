@@ -1,4 +1,3 @@
-# from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from asset_management.models import Workshop
 from asset_management.serializers import WorkshopSerializer

@@ -15,8 +15,8 @@ class Workshop(models.Model):
 class Productionline(models.Model):
     id = models.AutoField(primary_key=True)  # 自增主键
     name = models.CharField(max_length=100)  # 名称/
-    workshop_id = models.IntegerField(default=0)  # 车间id
     shortened = models.CharField(max_length=50, default='')  # 简称/
+    workshop_id = models.IntegerField(default=0)  # 车间id
     asset_number = models.IntegerField(default=0)  # 资产数量/
 
 # 资产信息表 （3级）

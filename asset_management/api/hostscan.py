@@ -24,7 +24,7 @@ class AssetScan(APIView):
         data = request.data
         network = data['netSeg']  # 扫描的目标网段
         speed = data['maxThreadNum']  # nmap扫描速度等级
-        portRange = data['portRange']  # nmap扫描端口范围
+        portRange = data['gitgi']  # nmap扫描端口范围
         arguments = '-sV -O -p ' + str(portRange) + ' -T' + str(speed)
         try:
             infos = multiScan(network, arguments)

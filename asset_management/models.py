@@ -61,7 +61,7 @@ class JtopoDevices(models.Model):
     name = models.CharField(max_length=100)  # 新增设备名称
     type = models.CharField(max_length=50, default='')  # 新增设备类型
     title = models.CharField(max_length=200, default='')  # 新增设备简单描述
-    imgUrl = models.CharField(max_length=100, default='')  # 新增设备图标路径，计划放在JtopoImg文件夹下
+    imgUrl = models.CharField(max_length=100, default='')  # 新增设备图标路径，计划放在asset_management/files/jtopo_img/下
 
 # 拓扑图文件ID和对应的文件路径表
 class JtopoFilePath(models.Model):

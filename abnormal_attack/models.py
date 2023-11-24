@@ -4,6 +4,19 @@ from django.db import models
 
 # 异常攻击发现表
 class AbnormalTraffic(models.Model):
+    FLOW_TYPE_CHOICES = (
+        (0, 'DDoS'),
+        (1, 'Webshell'),
+        (2, 'Botnet'),
+        (3, 'Trojan'),
+        (4, 'Worm'),
+        (5, 'Virus'),
+        (6, 'SQL Injection'),
+        (7, 'XML Injection'),
+        (8, 'XSS'),
+        (9, 'Port Scan'),
+    )
+    
     id = models.AutoField(primary_key=True)     # 自增主键
     type = models.IntegerField(default=0)       # 攻击类型
     time = models.DateTimeField()               # 发现时间

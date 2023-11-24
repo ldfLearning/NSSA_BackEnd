@@ -1,5 +1,5 @@
 from django.urls import path
-from api.traffic import AbnormalTrafficListAPIView, AbnormalTrafficDetailAPIView
+from abnormal_attack.api.traffic import AbnormalTrafficListAPIView, AbnormalTrafficDetailAPIView
 
 urlpatterns = [
     path('traffics', AbnormalTrafficListAPIView.as_view()),

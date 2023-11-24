@@ -3,9 +3,10 @@ from http import HTTPStatus
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 
-from ..models import AbnormalTraffic
-from ..serializers import AbnormalTrafficSerializer
-from ...response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
+from abnormal_attack.models import AbnormalTraffic
+from abnormal_attack.serializers import AbnormalTrafficSerializer
+from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
+
 
 # 对AbnormalTraffic表单进行检查
 class AbnormalTrafficForm(forms.ModelForm):
@@ -21,6 +22,7 @@ class AbnormalTrafficForm(forms.ModelForm):
             raise forms.ValidationError('Invalid type value')
         return type_value
 
+
 # 批量查询和新增
 class AbnormalTrafficListAPIView(APIView):
     # 设置分页类
@@ -33,9 +35,9 @@ class AbnormalTrafficListAPIView(APIView):
             type = request.GET.get('type')
             src_ip = request.GET.get('src_ip')
             dst_ip = request.GET.get('dst_ip')
-            sort = request.GET.get('sort', 'desc')      # 默认按升序排序
-            page = request.GET.get('page', 1)           # 默认为第一页
-            page_size = request.GET.get('limit', 10)    # 默认每页大小为10
+            sort = request.GET.get('sort', 'desc')  # 默认按升序排序
+            page = request.GET.get('page', 1)  # 默认为第一页
+            page_size = request.GET.get('limit', 10)  # 默认每页大小为10
 
             # 构建筛选条件
             filters = {}
@@ -92,6 +94,7 @@ class AbnormalTrafficListAPIView(APIView):
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
 
+
 # 查询、修改、删除
 class AbnormalTrafficDetailAPIView(APIView):
     # 根据id查询对应记录
@@ -134,11 +137,11 @@ class AbnormalTrafficDetailAPIView(APIView):
                 return CustomResponse(data=form.cleaned_data)
             else:
                 return CustomResponse(
-                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
-                msg=ERROR_MESSAGES['INVALID_REQUEST'],
-                data={},
-                status=HTTPStatus.INTERNAL_SERVER_ERROR
-            )
+                    code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                    msg=ERROR_MESSAGES['INVALID_REQUEST'],
+                    data={},
+                    status=HTTPStatus.INTERNAL_SERVER_ERROR
+                )
             # serializer = AbnormalTrafficSerializer(
             #     abnormal_traffic, data=request.data)
             # if serializer.is_valid():

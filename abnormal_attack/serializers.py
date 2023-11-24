@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import AbnormalTraffic
+from abnormal_attack.models import AbnormalTraffic
+
 
 class AbnormalTrafficSerializer(serializers.ModelSerializer):
     class Meta:

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-u%gh&47vyr05-@nddy&vy4$mnjx203-nhk%d1bhf%)q2bf1pe1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     # 在此注册各模块的app
     'rest_framework',
     'abnormal_attack',
+    'asset_management',
+    'risk_analysis',
 ]
 
 MIDDLEWARE = [

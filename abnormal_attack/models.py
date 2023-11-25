@@ -32,7 +32,7 @@ class AbnormalHost(models.Model):
     ip = models.CharField(max_length=20)  # 资产IP
     name = models.CharField(max_length=100, default='')  # 资产名称
     errprint = models.CharField(max_length=200, default='')  # 异常信息
-    time = models.CharField(max_length=50, default='')  # 异常时间
+    time = models.DateTimeField()  # 发现时间
 
 
 # 用户行为检测表

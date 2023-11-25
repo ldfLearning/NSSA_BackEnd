@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import AbnormalTraffic
+from abnormal_attack.models import AbnormalTraffic, AbnormalHost
+
 
 class AbnormalTrafficSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,4 +10,9 @@ class AbnormalTrafficSerializer(serializers.ModelSerializer):
 class AbnormalUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = AbnormalUser
+        fields = '__all__'
+
+class AbnormalHostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AbnormalHost
         fields = '__all__'

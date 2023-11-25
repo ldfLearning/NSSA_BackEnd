@@ -3,28 +3,20 @@ from http import HTTPStatus
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 
-from abnormal_attack.models import AbnormalTraffic
-from abnormal_attack.serializers import AbnormalTrafficSerializer
+from abnormal_attack.models import AbnormalHost
+from abnormal_attack.serializers import AbnormalHostSerializer
 from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
 
 
-# 对AbnormalTraffic表单进行检查
-class AbnormalTrafficForm(forms.ModelForm):
+# 对AbnormalHost表单进行检查
+class AbnormalHostForm(forms.ModelForm):
     class Meta:
-        model = AbnormalTraffic
+        model = AbnormalHost
         fields = '__all__'
-
-    def clean_type(self):
-        type_value = self.cleaned_data['type']
-        valid_types = [choice[0]
-                       for choice in AbnormalTraffic.FLOW_TYPE_CHOICES]
-        if type_value not in valid_types:
-            raise forms.ValidationError('Invalid type value')
-        return type_value
 
 
 # 批量查询和新增
-class AbnormalTrafficListAPIView(APIView):
+class AbnormalHostListAPIView(APIView):
     # 设置分页类
     pagination_class = PageNumberPagination
 
@@ -32,9 +24,7 @@ class AbnormalTrafficListAPIView(APIView):
     def get(self, request):
         try:
             content = request.GET.get('content')
-            type = request.GET.get('type')
-            src_ip = request.GET.get('src_ip')
-            dst_ip = request.GET.get('dst_ip')
+            ip = request.GET.get('ip')
             sort = request.GET.get('sort', 'desc')  # 默认按升序排序
             page = request.GET.get('page', 1)  # 默认为第一页
             page_size = request.GET.get('limit', 10)  # 默认每页大小为10
@@ -43,34 +33,30 @@ class AbnormalTrafficListAPIView(APIView):
             filters = {}
             if content:
                 filters['detail__icontains'] = content
-            if type:
-                filters['type'] = type
-            if src_ip:
-                filters['src_ip'] = src_ip
-            if dst_ip:
-                filters['dst_ip'] = dst_ip
+            if ip:
+                filters['ip'] = ip
 
             # 应用筛选条件
-            abnormal_traffic = AbnormalTraffic.objects.filter(**filters)
+            abnormal_host = AbnormalHost.objects.filter(**filters)
 
             # 排序
             if sort.lower() == 'desc':
-                abnormal_traffic = abnormal_traffic.order_by('-time')
+                abnormal_host = abnormal_host.order_by('-time')
             else:
-                abnormal_traffic = abnormal_traffic.order_by('time')
+                abnormal_host = abnormal_host.order_by('time')
 
             # 应用分页类进行分页
             paginator = self.pagination_class()
             paginator.page = int(page)
             paginator.page_size = int(page_size)
             result_page = paginator.paginate_queryset(
-                abnormal_traffic, request)
-            serializer = AbnormalTrafficSerializer(result_page, many=True)
+                abnormal_host, request)
+            serializer = AbnormalHostSerializer(result_page, many=True)
 
             # 响应
             return CustomResponse(data={
-                'count': abnormal_traffic.count(),
-                'traffic': serializer.data,
+                'count': abnormal_host.count(),
+                'host': serializer.data,
             })
         except Exception as e:
             return CustomResponse(
@@ -82,7 +68,7 @@ class AbnormalTrafficListAPIView(APIView):
 
     # 新增
     def post(self, request):
-        form = AbnormalTrafficForm(request.data)
+        form = AbnormalHostForm(request.data)
         if form.is_valid():
             form.save()
             return CustomResponse()
@@ -96,12 +82,12 @@ class AbnormalTrafficListAPIView(APIView):
 
 
 # 查询、修改、删除
-class AbnormalTrafficDetailAPIView(APIView):
+class AbnormalHostDetailAPIView(APIView):
     # 根据id查询对应记录
     def get_object(self, id):
         try:
-            return AbnormalTraffic.objects.get(id=id)
-        except AbnormalTraffic.DoesNotExist:
+            return AbnormalHost.objects.get(id=id)
+        except AbnormalHost.DoesNotExist:
             return CustomResponse(
                 code=ERROR_CODES['NOT_FOUND'],
                 msg=ERROR_MESSAGES['NOT_FOUND'],
@@ -113,8 +99,8 @@ class AbnormalTrafficDetailAPIView(APIView):
     def get(self, request):
         try:
             id = request.GET.get('id')
-            abnormal_traffic = self.get_object(id)
-            serializer = AbnormalTrafficSerializer(abnormal_traffic)
+            abnormal_host = self.get_object(id)
+            serializer = AbnormalHostSerializer(abnormal_host)
             return CustomResponse(data=serializer.data)
         except Exception as e:
             return CustomResponse(
@@ -129,9 +115,9 @@ class AbnormalTrafficDetailAPIView(APIView):
         try:
             # 查询记录
             id = request.GET.get('id')
-            abnormal_traffic = self.get_object(id)
+            abnormal_host = self.get_object(id)
             # 校验数据
-            form = AbnormalTrafficForm(request.data, instance=abnormal_traffic)
+            form = AbnormalHostForm(request.data, instance=abnormal_host)
             if form.is_valid():
                 form.save()
                 return CustomResponse(data=form.cleaned_data)
@@ -166,8 +152,8 @@ class AbnormalTrafficDetailAPIView(APIView):
     def delete(self, request):
         try:
             id = request.GET.get('id')
-            abnormal_traffic = self.get_object(id)
-            abnormal_traffic.delete()
+            abnormal_host = self.get_object(id)
+            abnormal_host.delete()
             return CustomResponse(status=204)
         except Exception as e:
             return CustomResponse(

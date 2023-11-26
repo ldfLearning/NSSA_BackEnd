@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from abnormal_attack.models import AbnormalTraffic, AbnormalHost
+from abnormal_attack.models import AbnormalTraffic, AbnormalHost, AbnormalUser
 
 
 class AbnormalTrafficSerializer(serializers.ModelSerializer):

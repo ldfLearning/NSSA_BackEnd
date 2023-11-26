@@ -3,9 +3,9 @@ from http import HTTPStatus
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 
-from ..models import AbnormalUser
-from ..serializers import AbnormalUserSerializer
-from ...response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
+from abnormal_attack.models import AbnormalUser
+from abnormal_attack.serializers import AbnormalUserSerializer
+from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
 
 # 对AbnormalUser表单进行检查
 class AbnormalUserForm(forms.ModelForm):
@@ -23,10 +23,7 @@ class AbnormalUserListAPIView(APIView):
         try:
             content = request.GET.get('content')
             type = request.GET.get('type')
-            time = request.GET.get('time')
             user_name = request.GET.get('user_name')
-            topic = request.GET.get('topic')
-            src_ip = request.GET.get('src_ip')
             sort = request.GET.get('sort', 'desc')      # 默认按升序排序
             page = request.GET.get('page', 1)           # 默认为第一页
             page_size = request.GET.get('limit', 10)    # 默认每页大小为10
@@ -37,8 +34,8 @@ class AbnormalUserListAPIView(APIView):
                 filters['detail__icontains'] = content
             if type:
                 filters['type'] = type
-            if src_ip:
-                filters['src_ip'] = src_ip
+            if user_name:
+                filters['user_name'] = user_name
 
             # 应用筛选条件
             abnormal_user = AbnormalUser.objects.filter(**filters)
@@ -105,6 +102,44 @@ class AbnormalUserDetailAPIView(APIView):
             abnormal_user = self.get_object(id)
             serializer = AbnormalUserSerializer(abnormal_user)
             return CustomResponse(data=serializer.data)
+        except Exception as e:
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=str(e),
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+
+     # 修改记录
+    def put(self, request):
+        try:
+            # 查询记录
+            id = request.GET.get('id')
+            abnormal_user = self.get_object(id)
+            # 校验数据
+            form = AbnormalUserForm(request.data, instance=abnormal_user)
+            if form.is_valid():
+                form.save()
+                return CustomResponse(data=form.cleaned_data)
+            else:
+                return CustomResponse(
+                    code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                    msg=ERROR_MESSAGES['INVALID_REQUEST'],
+                    data={},
+                    status=HTTPStatus.INTERNAL_SERVER_ERROR
+                )
+            # serializer = AbnormalUserSerializer(
+            #     abnormal_traffic, data=request.data)
+            # if serializer.is_valid():
+            #     serializer.save()
+            #     return CustomResponse(data=serializer.data)
+            # return CustomResponse(
+            #     code=ERROR_CODES['INVALID_DATA'],
+            #     msg=ERROR_MESSAGES['INVALID_DATA'],
+            #     data=serializer.errors,
+            #     status=HTTPStatus.INTERNAL_SERVER_ERROR
+
+            # )
         except Exception as e:
             return CustomResponse(
                 code=ERROR_CODES['INTERNAL_SERVER_ERROR'],

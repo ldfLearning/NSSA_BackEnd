@@ -19,4 +19,5 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('risk/', include('risk_analysis.urls')),
+    path('warning/', include('emergency_response.urls')),
 ]

@@ -37,11 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',#定时监测，必须要添加到前面，不能接着app后面添加，否则会报错
     # 在此注册各模块的app
     'rest_framework',
     'abnormal_attack',
     'asset_management',
     'risk_analysis',
+    'emergency_response',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +131,25 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#python manage.py crontab add 项目启动时执行，如果已经存在，不用再次执行
+#python manage.py crontab remove 项目关闭后执行，不然一直定时检测
+CRONJOBS = [
+    ('*/1 * * * *', 'emergency_response.tasks.check_and_send','>>/home/c415/ldf/NSSA_BackEnd/warning.log'),  # 每1分钟执行一次,日志记录函数打印内容
+]
+
+# 发送邮件设置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# SMTP地址
+EMAIL_HOST = 'smtp.qq.com'
+# SMTP端口
+EMAIL_PORT = 25
+# 发送邮箱
+EMAIL_HOST_USER = ''
+# 发送邮箱授权码，非密码
+EMAIL_HOST_PASSWORD = ''
+EMAIL_SUBJECT_PREFIX = '告警响应'
+EMAIL_USE_TLS = True  # 是否使用TLS加密
+
+EMAIL_RECIPIENT = ''#接收邮箱
+EMAIL_ADDRESSER_SHOW = '态势感知项目管理员'

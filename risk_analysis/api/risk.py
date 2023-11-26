@@ -1,6 +1,6 @@
-from django.http import JsonResponse
-from rest_framework import status
+from http import HTTPStatus
 from rest_framework.views import APIView
+from response import CustomResponse, ERROR_CODES
 #假设其他组的模型表已经建好
 from asset_management.models import AssetService
 from abnormal_attack.models import AbnormalTraffic,AbnormalHost,AbnormalUser
@@ -8,7 +8,6 @@ from abnormal_attack.models import AbnormalTraffic,AbnormalHost,AbnormalUser
 class RiskAnalysisAPIView(APIView):
     #风险值 = R(A, T, V) = R(L(T, V), F(Ia, Va ))
     def post(self, request):  # 处理前端发送过来的post请求
-        res = {'code': 0, 'msg': '分析成功', 'data': {}}
         asset_ip = request.data.get('assetIp')  # 获取资产IP
         asset_value = request.data.get('assetValue')  # 获取资产价值
 
@@ -16,7 +15,7 @@ class RiskAnalysisAPIView(APIView):
             #威胁性
             total_threat_value = 0
             T = 0
-            flow_count = AbnormalTraffic.objects.count()  # 获取AbnormalFlow的所有记录数量
+            flow_count = AbnormalTraffic.objects.count()  # 获取AbnormalTraffic的所有记录数量
             ip_flows = AbnormalTraffic.objects.filter(src_ip=asset_ip)
             ip_flows_count = ip_flows.count()
 
@@ -55,16 +54,18 @@ class RiskAnalysisAPIView(APIView):
             F = asset_value * V
             R = L * F * total_threat_value
 
-            res['data'] = {
+            data = {
                 'total_threat_value': total_threat_value,
                 'Va': vulnerability_value,
                 'R':round(R)
             }
 
-        except Exception as e:
-            print(e)
-            res['code'] = -1
-            res['msg'] = '分析失败'
-            return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return CustomResponse(data=data)
 
-        return JsonResponse(res)
+        except Exception as e:
+              return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=str(e),
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )

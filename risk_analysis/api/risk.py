@@ -1,6 +1,3 @@
-import json
-from django.db.models import Q
-from django.core import serializers
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.views import APIView
@@ -29,11 +26,11 @@ class RiskAnalysisAPIView(APIView):
             
             #根据异常流量类型计算威胁值
             for flow in ip_flows:
-                threat_value = flow.flow_type
+                threat_value = flow.flow_type+1
                 total_threat_value += threat_value
 
             #脆弱性
-            vulnerability_value = 1 #即Va至少为1，确保（1-1/va）在0-1之间
+            vulnerability_value = 0 
             #脆弱性分数是根据异常用户、异常主机和资产端口开放情况来评估
             services = AssetService.objects.filter(ip=asset_ip)  # 根据资产ID获取资产服务信息
             ports = [service.port for service in services]  # 获取所有端口
@@ -51,7 +48,7 @@ class RiskAnalysisAPIView(APIView):
             vulnerability_value += host_count*5
 
             #脆弱性(V) 
-            V = 1-1/vulnerability_value
+            V = 1-1/(vulnerability_value+1)
 
             #风险
             L = T * V
@@ -60,7 +57,7 @@ class RiskAnalysisAPIView(APIView):
 
             res['data'] = {
                 'total_threat_value': total_threat_value,
-                'Va': vulnerability_value-1,
+                'Va': vulnerability_value,
                 'R':round(R)
             }
 

@@ -1,24 +1,39 @@
-from django.http import JsonResponse
-from rest_framework import status
+from http import HTTPStatus
+from django import forms
+from response import CustomResponse, ERROR_CODES,ERROR_MESSAGES
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from emergency_response.serializers import AbnormalWarningSerializer
 from ..tasks import monitor_warning
 from ..models import AbnormalWarning
 
+# 对AbnormalWarning表单进行检查
+class AbnormalWarningForm(forms.ModelForm):
+    class Meta:
+        model = AbnormalWarning
+        fields = '__all__'
+
+    def clean_type(self):
+        type_value = self.cleaned_data['type']
+        valid_types = [choice[0]
+                       for choice in AbnormalWarning.ABNORMAL_TYPE_CHOICES]
+        if type_value not in valid_types:
+            raise forms.ValidationError('Invalid type value')
+        return type_value
+
 class WarningMonitorAPIView(APIView):
       def get(self, request):  
-            res = {'code': 0, 'msg': '告警响应查询成功', 'data': []}
             try:
                 warning_results = monitor_warning()
-                res['data'] = warning_results
+                return CustomResponse(data=warning_results)
+            
             except Exception as e:
-                print(e)
-                res['code'] = -1
-                res['msg'] = '告警响应失败'
-                return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            return JsonResponse(res)
+                return CustomResponse(
+                    code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                    msg=str(e),
+                    data={},
+                    status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
       
 class WarningListAPIView(APIView):
       # 设置分页类
@@ -64,17 +79,100 @@ class WarningListAPIView(APIView):
             serializer = AbnormalWarningSerializer(result_page, many=True)
 
             # 响应
-            return JsonResponse(
-                code=0,
-                msg='查询成功',
+            return CustomResponse(
                 data={
                 'count': abnormal_warning.count(),
                 'warning': serializer.data,
             })
         except Exception as e:
-            return JsonResponse(
-                code=-1,
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
                 msg=str(e),
                 data={},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+        
+         # 新增
+      
+      #增加，可能不需要这个api
+      def post(self, request):
+            form = AbnormalWarningForm(request.data)
+            if form.is_valid():
+                form.save()
+                return CustomResponse()
+            else:
+                return CustomResponse(
+                    code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                    msg=ERROR_MESSAGES['INVALID_REQUEST'],
+                    data={},
+                    status=HTTPStatus.INTERNAL_SERVER_ERROR
+                )
+
+class WarningDetailAPIView(APIView):
+      # 根据id查询对应记录
+    def get_object(self, id):
+        try:
+            return AbnormalWarning.objects.get(id=id)
+        except AbnormalWarning.DoesNotExist:
+            return CustomResponse(
+                code=ERROR_CODES['NOT_FOUND'],
+                msg=ERROR_MESSAGES['NOT_FOUND'],
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+
+    # 查询记录
+    def get(self, request):
+        try:
+            id = request.GET.get('id')
+            abnormal_traffic = self.get_object(id)
+            serializer = AbnormalWarningSerializer(abnormal_traffic)
+            return CustomResponse(data=serializer.data)
+        except Exception as e:
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=str(e),
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+
+    # 修改记录
+    def put(self, request):
+        try:
+            # 查询记录
+            id = request.GET.get('id')
+            abnormal_warning = self.get_object(id)
+            # 校验数据
+            form = AbnormalWarningForm(request.data, instance=abnormal_warning)
+            if form.is_valid():
+                form.save()
+                return CustomResponse(data=form.cleaned_data)
+            else:
+                return CustomResponse(
+                    code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                    msg=ERROR_MESSAGES['INVALID_REQUEST'],
+                    data={},
+                    status=HTTPStatus.INTERNAL_SERVER_ERROR
+                )
+        except Exception as e:
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=str(e),
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+
+    # 删除记录
+    def delete(self, request):
+        try:
+            id = request.GET.get('id')
+            abnormal_warning = self.get_object(id)
+            abnormal_warning.delete()
+            return CustomResponse(status=204)
+        except Exception as e:
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=str(e),
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
             )

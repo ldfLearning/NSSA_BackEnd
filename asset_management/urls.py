@@ -24,7 +24,7 @@ urlpatterns = [
 
     path("asset/", AssetBasicView.as_view()),  # 资产信息表基本增删改查
     path("assetfile/", AssetFileView.as_view()),  # 资产信息表文件导入导出
-    path("asset/autosn/", DeskDeviceAPIView.as_view()),  # 更新资产信息表中的设备SN和设备类型
+    path("asset/snupdate/", DeskDeviceAPIView.as_view()),  # 更新资产信息表中的设备SN和设备类型
 
     path("assetservice/", AssetServiceBasicView.as_view()),  # 资产服务信息表基本增删改查
 

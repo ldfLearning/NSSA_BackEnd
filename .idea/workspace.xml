@@ -6,7 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="2cb8ada9-82dd-425c-9c69-2451d68f8092" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/api/asset.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/asset.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/asset_management/api/assetservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/assetservice.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/api/hostscan.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/hostscan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/api/productionline.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/productionline.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/api/workshop.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/workshop.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/response.py" beforeDir="false" afterPath="$PROJECT_DIR$/response.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +125,7 @@
       <workItem from="1701080848781" duration="84000" />
       <workItem from="1701080939874" duration="26000" />
       <workItem from="1701080977264" duration="388000" />
-      <workItem from="1701084800279" duration="250000" />
+      <workItem from="1701084800279" duration="10400000" />
     </task>
     <servers />
   </component>
@@ -135,7 +143,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/main" />
+                        <option value="Asset-Management" />
                       </list>
                     </value>
                   </entry>

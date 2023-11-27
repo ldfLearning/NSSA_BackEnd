@@ -1,3 +1,6 @@
+from http import HTTPStatus
+from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
+
 from asset_management.models import *
 from asset_management.scan.nmap_alive import scanNetwork
 from asset_management.serializers import AssetSerializer
@@ -20,7 +23,6 @@ class AssetScan(APIView):
         return Response(ser.data)
 
     def post(self, request):
-        res = {'code': 0, 'msg': '查询成功', 'data': []}
         data = request.data
         network = data['netSeg']  # 扫描的目标网段
         speed = data['maxThreadNum']  # nmap扫描速度等级
@@ -32,27 +34,38 @@ class AssetScan(APIView):
         except Exception as e:
             print(e)
             print('扫描过程中出错')
-            res['code'] = -1
-            res['msg'] = '扫描失败'
-            return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=ERROR_MESSAGES['INTERNAL_SERVER_ERROR'],
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
         try:
             for info in infos:
                 addToDB(info)
-            res['msg'] = '扫描成功'
         except Exception as e:
             print(e)
             print('扫描信息入库失败')
-            res['code'] = -1
-            res['msg'] = '扫描信息入库失败'
-            return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=ERROR_MESSAGES['INTERNAL_SERVER_ERROR'],
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
         try:
             asset_list = Asset.objects.all()
             asset_list = json.loads(serializers.serialize("json", asset_list))
-            res['data'] = asset_list
+            resdata = asset_list
         except Exception as e:
-            res['code'] = -1
-            res['msg'] = '查询失败'
-        return JsonResponse(res)
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=ERROR_MESSAGES['INTERNAL_SERVER_ERROR'],
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+        return CustomResponse(
+            data=resdata
+        )
 
 
 def addToDB(info):  # 分析单机扫描的结果，将主机信息和主机服务信息添加进数据库

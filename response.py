@@ -5,6 +5,9 @@ ERROR_CODES = {
     'AUTHENTICATION_FAILED': 1002,
     'PERMISSION_DENIED': 1003,
     # 其他错误码定义...
+    'INVALID_REQUEST': 1004,
+    'BAD_REQUEST': 1005,
+    'INTERNAL_SERVER_ERROR': 1006,
 }
 
 ERROR_MESSAGES = {
@@ -12,7 +15,11 @@ ERROR_MESSAGES = {
     'AUTHENTICATION_FAILED': 'Authentication failed',
     'PERMISSION_DENIED': 'Permission denied',
     # 其他错误信息定义...
+    'INVALID_REQUEST': 'Invalid request',
+    'BAD_REQUEST': 'Bad request',
+    'INTERNAL_SERVER_ERROR': 'Internal server error',
 }
+
 
 class CustomResponse(Response):
     def __init__(self, code=0, msg='success', data=None, status=None,

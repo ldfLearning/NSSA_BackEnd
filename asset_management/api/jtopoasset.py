@@ -37,7 +37,7 @@ class JtopoAssetView(APIView):
             JtopoDevices.objects.create(name=query['name'], type=query['type'], title=query['descrip'],
                                         imgUrl=query['icon'])
             # 更新json文件中的设备列表
-            filepath = "asset_management/files/static/topo.json"
+            filepath = "asset_management/files/jtopo_json/topo.json"
             load_dict = readJson(filepath)
             load_dict["AssetList"] = generateDeviceList()
             writeJson(load_dict, filepath)
@@ -62,7 +62,7 @@ class JtopoAssetView(APIView):
             device = JtopoDevices.objects.filter(name=query['name'])
             device.delete()
             # 更新json文件中的设备列表
-            filepath = "asset_management/files/static/topo.json"
+            filepath = "asset_management/files/jtopo_json/topo.json"
             load_dict = readJson(filepath)
             load_dict["AssetList"] = generateDeviceList()
             writeJson(load_dict, filepath)

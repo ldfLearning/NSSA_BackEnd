@@ -9,7 +9,7 @@ class AbnormalTraffic(models.Model):
     time = models.DateTimeField()               # 发现时间
     src_ip = models.CharField(max_length=20)    # 源IP
     dst_ip = models.CharField(max_length=20)    # 目的IP
-    detail = models.CharField()                 # 详细信息
+    detail = models.TextField()                 # 详细信息
 
 # 异常主机发现表
 class AbnormalHost(models.Model):
@@ -27,3 +27,4 @@ class AbnormalUser(models.Model):
     user_name = models.CharField(max_length=50) # 用户姓名
     topic = models.CharField(max_length=200)    # 主题名称
     src_ip = models.CharField(max_length=20)    # IP
+

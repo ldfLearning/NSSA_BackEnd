@@ -5,13 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2cb8ada9-82dd-425c-9c69-2451d68f8092" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/asset_management/api/jtopoasset.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset_management/api/jtopoauto.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset_management/api/jtopojson.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asset_management/tools/jtopotools.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/asset_management/api/DeskDeviceAPI.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/asset_management/api/DeskDeviceAutoAPI.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/router.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/abnormal_attack/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/abnormal_attack/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/api/hostscan.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/hostscan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/api/jtopoasset.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/jtopoasset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/api/jtopoauto.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/api/jtopoauto.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/jtopo_json/1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/jtopo_json/2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/jtopo_json/3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/jtopo_json/4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/jtopo_json/5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/jtopo_json/6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/jtopo_json/7.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/jtopo_json/8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/jtopo_json/topo.json" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/files/jtopo_json/topo.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/static/network.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/static/oldtopo.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/static/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/static/testtopo.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/files/static/topo.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asset_management/migrations/0001_initial.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/asset_management/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/asset_management/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/asset_management/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/wsgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/wsgi.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,16 +72,22 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;Asset-Management&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/User/Desktop/NSSA_BackEnd&quot;,
+    &quot;last_opened_file_path&quot;: &quot;G:/User/Desktop/NSSA_BackEnd/asset_management/api&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;http.proxy&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="G:\User\Desktop\NSSA_BackEnd\asset_management\api" />
+      <recent name="G:\User\Desktop\NSSA_BackEnd\web" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="NSSA_BackEnd" type="Python.DjangoServer" factoryName="Django server">
       <module name="NSSA_BackEnd" />
@@ -109,10 +135,35 @@
       <workItem from="1700408635219" duration="1234000" />
       <workItem from="1700462040899" duration="429000" />
       <workItem from="1700462485372" duration="8712000" />
+      <workItem from="1701070537456" duration="4633000" />
+      <workItem from="1701078176576" duration="922000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/Asset-Management" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

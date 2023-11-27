@@ -6,6 +6,7 @@ from asset_management.api.productionline import ProductionlineBasicView
 from asset_management.api.productionlinefile import ProductionlineFileView
 from asset_management.api.asset import AssetBasicView
 from asset_management.api.assetfile import AssetFileView
+from asset_management.api.DeskDeviceAPI import DeskDeviceAPIView
 from asset_management.api.assetservice import AssetServiceBasicView
 from asset_management.api.hostscan import AssetScan
 from asset_management.api.jtopojson import JtopoView
@@ -23,6 +24,7 @@ urlpatterns = [
 
     path("asset/", AssetBasicView.as_view()),  # 资产信息表基本增删改查
     path("assetfile/", AssetFileView.as_view()),  # 资产信息表文件导入导出
+    path("asset/autosn/", DeskDeviceAPIView.as_view()),  # 更新资产信息表中的设备SN和设备类型
 
     path("assetservice/", AssetServiceBasicView.as_view()),  # 资产服务信息表基本增删改查
 

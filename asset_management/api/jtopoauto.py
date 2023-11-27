@@ -92,7 +92,7 @@ class JtopoAutoView(APIView):
                         ydict[subnet] += 200
                         countAssetByRow[subnet] = 1
                     dicts[subnet]['topology_json']['childs'][0]['childs'].append(
-                        generateNode(ip, xdict[subnet], ydict[subnet], asset.type))
+                        generateNode(ip, xdict[subnet], ydict[subnet], asset.device_type))
                 except Exception as e:
                     print(e)
                     print('ip为%s的主机不在指定网段中' % ip)

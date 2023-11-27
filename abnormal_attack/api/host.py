@@ -27,7 +27,6 @@ class AbnormalHostListAPIView(APIView):
             page = request.GET.get('page', 1)           # 默认为第一页
             page_size = request.GET.get('pageSize', 10) # 默认每页大小为10
             content = request.GET.get('content')        # 关键字查询
-            ips = request.GET.getlist('ip')             # 类型筛选
             sort = request.GET.get('sort', 0)           # 默认按升序排序
 
             # 构建筛选条件
@@ -36,8 +35,7 @@ class AbnormalHostListAPIView(APIView):
                 filters |= Q(time__icontains=content)
                 filters |= Q(name__icontains=content)
                 filters |= Q(detail__icontains=content)
-            if ips:
-                filters &= Q(ip__in=ips)
+                filters |= Q(ip__icontains=content)
 
             # 应用筛选条件
             abnormal_host = AbnormalHost.objects.filter(filters)

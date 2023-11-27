@@ -43,9 +43,7 @@ class Asset(models.Model):
     productionline_id = models.IntegerField(default=0)  # 所属产线id
 
 
-# 资产IP和资产名称对应信息表 待定
 # 源于NCLINK网关的mosquitto日志
-
 # 资产服务信息表
 class AssetService(models.Model):
     id = models.AutoField(primary_key=True)  # 自增主键

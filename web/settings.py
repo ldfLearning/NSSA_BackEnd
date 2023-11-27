@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-u%gh&47vyr05-@nddy&vy4$mnjx203-nhk%d1bhf%)q2bf1pe1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -85,14 +85,14 @@ WSGI_APPLICATION = 'web.wsgi.application'
 # }
 
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.mysql',
-       'NAME': 'abnormal_host',
-       'USER': 'root',
-       'PASSWORD': '123456',
-       'HOST': '127.0.0.1',
-       'PORT': '3306',
-   }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'nssa-database',
+        'USER': 'nssa',
+        'PASSWORD': 'c317c317',
+        'HOST': '222.20.126.128',
+        'PORT': '3366',
+    }
 }
 
 

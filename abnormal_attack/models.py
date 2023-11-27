@@ -25,6 +25,9 @@ class AbnormalTraffic(models.Model):
     dst_ip = models.CharField(max_length=20)    # 目的IP
     detail = models.TextField()                 # 详细信息
 
+    class Meta:
+        db_table = 'abnormal_attack_traffic'
+
 
 # 异常主机发现表
 class AbnormalHost(models.Model):
@@ -34,12 +37,18 @@ class AbnormalHost(models.Model):
     detail = models.TextField()                             # 异常信息
     time = models.DateTimeField()                           # 发现时间
 
+    class Meta:
+        db_table = 'abnormal_attack_host'
+
 
 # 用户行为检测表
 class AbnormalUser(models.Model):
-    id = models.AutoField(primary_key=True)  # 自增主键
-    type = models.IntegerField(default=0)  # 0代表正常，1代表非法访问主题
-    time = models.DateTimeField()  # 发现时间
-    user_name = models.CharField(max_length=50)  # 用户姓名
-    topic = models.CharField(max_length=200)  # 主题名称
-    src_ip = models.CharField(max_length=20)  # IP
+    id = models.AutoField(primary_key=True)     # 自增主键
+    type = models.IntegerField(default=0)       # 0代表正常，1代表非法访问主题
+    time = models.DateTimeField()               # 发现时间
+    user_name = models.CharField(max_length=50) # 用户姓名
+    topic = models.CharField(max_length=200)    # 主题名称
+    src_ip = models.CharField(max_length=20)    # IP
+
+    class Meta:
+        db_table = 'abnormal_attack_user'

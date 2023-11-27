@@ -154,7 +154,7 @@ class AbnormalUserDetailAPIView(APIView):
             id = request.GET.get('id')
             abnormal_user = self.get_object(id)
             abnormal_user.delete()
-            return CustomResponse(status=204)
+            return CustomResponse()
         except Exception as e:
             return CustomResponse(
                 code=ERROR_CODES['INTERNAL_SERVER_ERROR'],

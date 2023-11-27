@@ -10,8 +10,9 @@ class AssetServiceBasicView(APIView):
         query = request.query_params.dict()
         page = int(query['page'])
         pageSize = int(query['pageSize'])
+        assetid = int(query['assetid'])
         content = str(query['content'])
-        resall = AssetService.objects.all()
+        resall = AssetService.objects.filter(asset_id=assetid)
         reschosen = []
         for i in resall:
             if ((str(i.id).find(content) != -1)
@@ -32,7 +33,7 @@ class AssetServiceBasicView(APIView):
         total = len(reschosen)
         totalPage = total // pageSize + 1
         res = {'total': total, 'totalPage': totalPage, 'nowPage': page, 'data': ser.data}
-        return Response(ser.data)
+        return Response(res)
 
     def post(self, request):
         assetservice_toadd = AssetServiceSerializer(data=request.data)

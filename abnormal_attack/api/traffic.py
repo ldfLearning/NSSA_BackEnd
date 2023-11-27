@@ -35,7 +35,7 @@ class AbnormalTrafficListAPIView(APIView):
             page = request.GET.get('page', 1)           # 默认为第一页
             page_size = request.GET.get('pageSize', 10) # 默认每页大小为10
             content = request.GET.get('content')        # 关键字查询（time,ip,detail）
-            types = request.GET.getlist('type')              # 类型筛选
+            types = request.GET.getlist('type')         # 类型筛选
             sort = request.GET.get('sort', 0)           # 默认按升序排序
             
 

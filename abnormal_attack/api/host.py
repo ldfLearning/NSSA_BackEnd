@@ -1,5 +1,6 @@
 from django import forms
 from http import HTTPStatus
+from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 
@@ -23,24 +24,26 @@ class AbnormalHostListAPIView(APIView):
     # 批量查询
     def get(self, request):
         try:
-            content = request.GET.get('content')
-            ip = request.GET.get('ip')
-            sort = request.GET.get('sort', 'desc')  # 默认按升序排序
-            page = request.GET.get('page', 1)  # 默认为第一页
-            page_size = request.GET.get('limit', 10)  # 默认每页大小为10
+            page = request.GET.get('page', 1)           # 默认为第一页
+            page_size = request.GET.get('pageSize', 10) # 默认每页大小为10
+            content = request.GET.get('content')        # 关键字查询
+            ips = request.GET.getlist('ip')             # 类型筛选
+            sort = request.GET.get('sort', 0)           # 默认按升序排序
 
             # 构建筛选条件
-            filters = {}
+            filters = Q()
             if content:
-                filters['detail__icontains'] = content
-            if ip:
-                filters['ip'] = ip
+                filters |= Q(time__icontains=content)
+                filters |= Q(name__icontains=content)
+                filters |= Q(detail__icontains=content)
+            if ips:
+                filters &= Q(ip__in=ips)
 
             # 应用筛选条件
-            abnormal_host = AbnormalHost.objects.filter(**filters)
+            abnormal_host = AbnormalHost.objects.filter(filters)
 
             # 排序
-            if sort.lower() == 'desc':
+            if sort == 0:
                 abnormal_host = abnormal_host.order_by('-time')
             else:
                 abnormal_host = abnormal_host.order_by('time')

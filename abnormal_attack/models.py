@@ -38,7 +38,7 @@ class AbnormalHost(models.Model):
 # 用户行为检测表
 class AbnormalUser(models.Model):
     id = models.AutoField(primary_key=True)  # 自增主键
-    type = models.IntegerField(default=0)  # 攻击类型
+    type = models.IntegerField(default=0)  # 0代表正常，1代表非法访问主题
     time = models.DateTimeField()  # 发现时间
     user_name = models.CharField(max_length=50)  # 用户姓名
     topic = models.CharField(max_length=200)  # 主题名称

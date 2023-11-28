@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # 在此注册各模块的app
     'rest_framework',
     'abnormal_attack',
+    'incident_response'
 ]
 
 MIDDLEWARE = [

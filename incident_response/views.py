@@ -37,7 +37,7 @@ class IncidentEventListAPIView(APIView):
             # 响应
             return CustomResponse(data={
                 'count': incident_event.count(),
-                'host': serializer.data,
+                'events': serializer.data,
             })
         except Exception as e:
             return CustomResponse(

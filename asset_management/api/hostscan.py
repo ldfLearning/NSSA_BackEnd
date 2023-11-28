@@ -30,6 +30,8 @@ class AssetScan(APIView):
         arguments = '-sV -O -p ' + str(portRange) + ' -T' + str(speed)
         try:
             infos = multiScan(network, arguments)
+            infoslen = len(infos)
+            print("-------------")
             print(infos)
         except Exception as e:
             print(e)
@@ -52,19 +54,12 @@ class AssetScan(APIView):
                 data={},
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
-        try:
-            asset_list = Asset.objects.all()
-            asset_list = json.loads(serializers.serialize("json", asset_list))
-            resdata = asset_list
-        except Exception as e:
-            return CustomResponse(
-                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
-                msg=ERROR_MESSAGES['INTERNAL_SERVER_ERROR'],
-                data={},
-                status=HTTPStatus.INTERNAL_SERVER_ERROR
-            )
+        # asset_list = Asset.objects.all()
+        # asset_list = json.loads(serializers.serialize("json", asset_list))
         return CustomResponse(
-            data=resdata
+            data={
+                "total": infoslen
+            }
         )
 
 

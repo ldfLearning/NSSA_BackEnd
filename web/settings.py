@@ -145,4 +145,8 @@ EMAIL_HOST_PASSWORD = ''
 
 EMAIL_USE_TLS = True  # 是否使用TLS加密
 
+# 添加一个变量，用于存储默认网卡的名称
+DEFAULT_NETWORK_INTERFACE = 'eno1'
+
+
 

@@ -20,5 +20,5 @@ class AbnormalWarning(models.Model):
 class EmailSettings(models.Model):
     id = models.AutoField(primary_key=True)     # 自增主键
     email_recipient = models.CharField(max_length=30)  #收件人邮箱
-    email_subject = models.CharField(max_length=100)    #邮件主题
-    email_addresser_name = models.CharField(max_length=100) #发件人显示名称
+    email_subject = models.CharField(max_length=100,default='态势告警')    #邮件主题
+    email_addresser_name = models.CharField(max_length=100,default='态势感知管理员') #发件人显示名称

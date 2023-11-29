@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',#定时监测，必须要添加到前面，不能接着app后面添加，否则会报错
     # 在此注册各模块的app
     'rest_framework',
     'abnormal_attack',
@@ -131,6 +132,12 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#python manage.py crontab add 项目启动时执行，如果已经存在，不用再次执行
+#python manage.py crontab remove 项目关闭后执行，不然一直定时检测
+CRONJOBS = [
+    ('*/1 * * * *', 'flow_monitoring.tasks.set_traffic_value','>>/home/c415/ldf/NSSA_BackEnd/traffic.log'),  # 每1分钟执行一次,日志记录函数打印内容
+]
 
 # 发送邮件设置
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

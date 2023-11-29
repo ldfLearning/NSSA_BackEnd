@@ -2,7 +2,7 @@ from http import HTTPStatus
 from django import forms
 from response import CustomResponse, ERROR_CODES,ERROR_MESSAGES
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta,datetime
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from emergency_response.serializers import AbnormalWarningSerializer
@@ -26,6 +26,7 @@ class WarningMonitorAPIView(APIView):
       def monitor_warning(self):
         # 计算当前时间和2分钟前的时间
         end_time = timezone.now()
+        # end_time = datetime.now()
         print(end_time)
         start_time = end_time - timedelta(minutes=2)
         print(start_time)

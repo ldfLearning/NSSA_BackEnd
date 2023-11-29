@@ -8,6 +8,8 @@ ERROR_CODES = {
     'INVALID_REQUEST': 1004,
     'BAD_REQUEST': 1005,
     'INTERNAL_SERVER_ERROR': 1006,
+    'NOT_ACCEPTABLE': 1007,
+    'PRECONDITION_FAILED': 1008,
 }
 
 ERROR_MESSAGES = {
@@ -18,6 +20,8 @@ ERROR_MESSAGES = {
     'INVALID_REQUEST': 'Invalid request',
     'BAD_REQUEST': 'Bad request',
     'INTERNAL_SERVER_ERROR': 'Internal server error',
+    'NOT_ACCEPTABLE': 'Not acceptable',
+    'PRECONDITION_FAILED': 'Precondition failed',
 }
 
 

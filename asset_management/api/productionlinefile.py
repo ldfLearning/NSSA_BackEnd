@@ -1,3 +1,6 @@
+from http import HTTPStatus
+from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
+
 import xlrd
 import xlwt
 from rest_framework import status
@@ -16,10 +19,13 @@ class ProductionlineFileView(APIView):
         try:
             return productionlineFileOut()
         except Exception as e:
-            print(repr(e))
-            res['code'] = 1
-            res['msg'] = '导出失败'
-            return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # 导出失败
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=ERROR_MESSAGES['INTERNAL_SERVER_ERROR'],
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
 
     def post(self, request):  # 处理前端发送过来的post请求，包含增删改查等多种类型
         res = {'code': 0, 'msg': '导入成功'}
@@ -30,13 +36,21 @@ class ProductionlineFileView(APIView):
                 print("get file")
                 return productionlineFileIn(file_object)
             else:
-                res['code'] = 1
-                res['msg'] = '文件打开失败'
-                return JsonResponse(res, status=status.HTTP_406_NOT_ACCEPTABLE)
+                # 文件打开失败
+                return CustomResponse(
+                    code=ERROR_CODES['NOT_ACCEPTABLE'],
+                    msg=ERROR_MESSAGES['NOT_ACCEPTABLE'],
+                    data={},
+                    status=HTTPStatus.NOT_ACCEPTABLE
+                )
         except Exception as e:
-            res['code'] = 2
-            res['msg'] = '文件导入失败'
-            return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # 文件导入失败
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=ERROR_MESSAGES['INTERNAL_SERVER_ERROR'],
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
 
 
 def productionlineFileOut():  # 将数据库中的主机信息导出到excel文件
@@ -49,7 +63,6 @@ def productionlineFileOut():  # 将数据库中的主机信息导出到excel文�
 
 # 导入的表要和导出的表格式一致，即都需要在第一列加上ID，但是导入表中的ID不重要，因为只会从第二列开始读取数据，数据库中的ID会自动生成
 def productionlineFileIn(f):
-    res = {'code': 0, 'msg': '导入成功'}
     type_excel = f.name.split('.')[1]
     if type_excel in ['xlsx', 'xls']:  # 支持的文件格式
         # 开始解析上传的excel表格
@@ -72,10 +85,20 @@ def productionlineFileIn(f):
                     productionline.save()
         except Exception as e:
             print(e)
-            res['code'] = 3
-            res['msg'] = '导入过程出现错误....'
-            return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return JsonResponse(res)
-    res['code'] = 2
-    res['msg'] = '上传文件格式不是xlsx'
-    return JsonResponse(res, status=status.HTTP_412_PRECONDITION_FAILED)
+            # 导入过程出现错误
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=ERROR_MESSAGES['INTERNAL_SERVER_ERROR'],
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+        return CustomResponse(
+            data={}
+        )
+    # 上传文件格式不是xlsx
+    return CustomResponse(
+        code=ERROR_CODES['PRECONDITION_FAILED'],
+        msg=ERROR_MESSAGES['PRECONDITION_FAILED'],
+        data={},
+        status=HTTPStatus.PRECONDITION_FAILED
+    )

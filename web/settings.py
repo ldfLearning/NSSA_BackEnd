@@ -136,7 +136,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #python manage.py crontab add 项目启动时执行，如果已经存在，不用再次执行
 #python manage.py crontab remove 项目关闭后执行，不然一直定时检测
 CRONJOBS = [
-    ('*/1 * * * *', 'flow_monitoring.tasks.set_traffic_value','>>/home/c415/ldf/NSSA_BackEnd/traffic.log'),  # 每1分钟执行一次,日志记录函数打印内容
+    ('*/2 * * * *', 'flow_monitoring.tasks.set_traffic_value','>>/home/c415/ldf/NSSA_BackEnd/traffic.log'),  # 每2分钟执行一次,日志记录函数打印内容
 ]
 
 # 发送邮件设置

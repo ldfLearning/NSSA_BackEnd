@@ -29,7 +29,7 @@ class RiskAnalysisAPIView(APIView):
                 total_threat_value += threat_value
 
             #脆弱性
-            vulnerability_value = 1 #即Va至少为1，确保（1-1/va）在0-1之间，看作基础脆弱值
+            vulnerability_value = 0 
             #脆弱性分数是根据异常用户、异常主机和资产端口开放情况来评估
             services = AssetService.objects.filter(ip=asset_ip)  # 根据资产ID获取资产服务信息
             ports = [service.port for service in services]  # 获取所有端口
@@ -47,12 +47,12 @@ class RiskAnalysisAPIView(APIView):
             vulnerability_value += host_count*5
 
             #脆弱性(V) 
-            V = 1-1/vulnerability_value + 0.1
+            V = 1-1/(vulnerability_value+1)
 
             #风险
-            L = T * V
-            F = asset_value * V
-            R = L * F * total_threat_value
+            L = T + V
+            F = asset_value * L
+            R = F * total_threat_value
 
             data = {
                 'total_threat_value': total_threat_value,

@@ -48,7 +48,7 @@ class EmailSendAPIView(APIView):
         try:
           emailsetting = self.getEmailSettings()
           print(emailsetting)
-          subject = ' 态势告警' + emailsetting.email_subject #主题
+          subject = emailsetting.email_subject #主题
           from_name = emailsetting.email_addresser_name  # 发件人显示
           from_email = settings.EMAIL_HOST_USER  # 发件人邮箱
           message = warning_msg

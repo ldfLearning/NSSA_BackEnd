@@ -14,7 +14,7 @@ class IncidentEvent(models.Model):
     type = models.IntegerField(default=0)   # 攻击类型
     time = models.DateTimeField()           # 发现时间
     finished = models.BooleanField()        # 是否已处理
-    content = models.TextField()                # 详细信息
+    content = models.TextField()            # 详细信息
 
     class Meta:
         db_table = 'incident_response_event'

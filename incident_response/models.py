@@ -12,9 +12,9 @@ class IncidentEvent(models.Model):
 
     id = models.AutoField(primary_key=True) # 自增主键
     type = models.IntegerField(default=0)   # 攻击类型
-    time = models.DateTimeField()           # 发现时间
     finished = models.BooleanField()        # 是否已处理
     content = models.TextField()            # 详细信息
+    time = models.DateTimeField(auto_now_add=True)  # 发现时间
 
     class Meta:
         db_table = 'incident_response_event'

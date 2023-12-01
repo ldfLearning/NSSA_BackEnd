@@ -20,10 +20,10 @@ class AbnormalTraffic(models.Model):
 
     id = models.AutoField(primary_key=True)     # 自增主键
     type = models.IntegerField(default=0)       # 攻击类型
-    time = models.DateTimeField()               # 发现时间
     src_ip = models.CharField(max_length=20)    # 源IP
     dst_ip = models.CharField(max_length=20)    # 目的IP
     detail = models.TextField()                 # 详细信息
+    time = models.DateTimeField(auto_now_add=True)  # 发现时间
 
     class Meta:
         db_table = 'abnormal_attack_traffic'
@@ -35,7 +35,7 @@ class AbnormalHost(models.Model):
     ip = models.CharField(max_length=20)                    # 资产IP
     name = models.CharField(max_length=100, default='')     # 资产名称
     detail = models.TextField()                             # 异常信息
-    time = models.DateTimeField()                           # 发现时间
+    time = models.DateTimeField(auto_now_add=True)          # 发现时间
 
     class Meta:
         db_table = 'abnormal_attack_host'
@@ -45,10 +45,10 @@ class AbnormalHost(models.Model):
 class AbnormalUser(models.Model):
     id = models.AutoField(primary_key=True)     # 自增主键
     type = models.IntegerField(default=0)       # 0代表正常，1代表非法访问主题
-    time = models.DateTimeField()               # 发现时间
     user_name = models.CharField(max_length=50) # 用户姓名
     topic = models.CharField(max_length=200)    # 主题名称
     src_ip = models.CharField(max_length=20)    # IP
+    time = models.DateTimeField(auto_now_add=True)  # 发现时间
 
     class Meta:
         db_table = 'abnormal_attack_user'

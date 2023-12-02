@@ -5,6 +5,7 @@ ERROR_CODES = {
     'AUTHENTICATION_FAILED': 1002,
     'PERMISSION_DENIED': 1003,
     # 其他错误码定义...
+    'INVALID_REQUEST': 1004
 }
 
 ERROR_MESSAGES = {
@@ -12,6 +13,7 @@ ERROR_MESSAGES = {
     'AUTHENTICATION_FAILED': 'Authentication failed',
     'PERMISSION_DENIED': 'Permission denied',
     # 其他错误信息定义...
+    'INVALID_REQUEST': 'Invalid request'
 }
 
 class CustomResponse(Response):

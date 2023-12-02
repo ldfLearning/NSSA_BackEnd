@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-u%gh&47vyr05-@nddy&vy4$mnjx203-nhk%d1bhf%)q2bf1pe1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # 在此注册各模块的app
     'rest_framework',
     'abnormal_attack',
+    'incident_response'
 ]
 
 MIDDLEWARE = [
@@ -77,12 +78,24 @@ WSGI_APPLICATION = 'web.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+# }
+
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-       'NAME': BASE_DIR / 'db.sqlite3',
-   }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'nssa-database',
+        'USER': 'nssa',
+        'PASSWORD': 'c317c317',
+        'HOST': '222.20.126.128',
+        'PORT': '3366',
+    }
 }
+
 
 
 # Password validation

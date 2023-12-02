@@ -48,6 +48,20 @@ def calculate_situation_value(history_step):
     return situation_value_list
 
 
+def load_predict_model():
+    """
+    Load predict model.
+    """
+    # model = load_model('tcn_gcn_model.h5')
+    # scaler = MinMaxScaler(feature_range=(0, 1))
+    # test_X = [[4000], [5000], [4700], [4500], [4000]]
+    # testX = scaler.fit_transform(np.array(test_X).reshape(-1, 1))
+    # #
+    # test_predict = model.predict(np.array([testX]))
+    # print(test_predict)
+
+
+
 class SituationPredictionView(APIView):
 
     def get(self, request):

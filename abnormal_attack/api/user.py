@@ -1,5 +1,6 @@
 from django import forms
 from http import HTTPStatus
+from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 
@@ -21,27 +22,27 @@ class AbnormalUserListAPIView(APIView):
     # 批量查询
     def get(self, request):
         try:
-            content = request.GET.get('content')
-            type = request.GET.get('type')
-            user_name = request.GET.get('user_name')
-            sort = request.GET.get('sort', 'desc')      # 默认按升序排序
             page = request.GET.get('page', 1)           # 默认为第一页
-            page_size = request.GET.get('limit', 10)    # 默认每页大小为10
+            page_size = request.GET.get('pageSize', 10) # 默认每页大小为10
+            content = request.GET.get('content')        # 关键字查询（time,ip,detail）
+            types = request.GET.getlist('type')              # 类型筛选
+            sort = request.GET.get('sort', 0)           # 默认按升序排序
 
             # 构建筛选条件
-            filters = {}
+            filters = Q()
             if content:
-                filters['detail__icontains'] = content
-            if type:
-                filters['type'] = type
-            if user_name:
-                filters['user_name'] = user_name
+                filters |= Q(time__icontains=content)
+                filters |= Q(user_name__icontains=content)
+                filters |= Q(topic__icontains=content)
+                filters |= Q(src_ip__icontains=content)
+            if types:
+                filters &= Q(type__in=types)
 
             # 应用筛选条件
-            abnormal_user = AbnormalUser.objects.filter(**filters)
+            abnormal_user = AbnormalUser.objects.filter(filters)
 
             # 排序
-            if sort.lower() == 'desc':
+            if sort == 0:
                 abnormal_user = abnormal_user.order_by('-time')
             else:
                 abnormal_user = abnormal_user.order_by('time')
@@ -154,7 +155,7 @@ class AbnormalUserDetailAPIView(APIView):
             id = request.GET.get('id')
             abnormal_user = self.get_object(id)
             abnormal_user.delete()
-            return CustomResponse(status=204)
+            return CustomResponse()
         except Exception as e:
             return CustomResponse(
                 code=ERROR_CODES['INTERNAL_SERVER_ERROR'],

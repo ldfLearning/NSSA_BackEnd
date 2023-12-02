@@ -16,5 +16,5 @@ __pycache__/
 .vscode/
 .idea/
 
-# database
-db.sqlite3
+# Django
+migrations/

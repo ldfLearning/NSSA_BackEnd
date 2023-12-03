@@ -49,11 +49,18 @@ class ThreatAPIView(APIView):
 
             # 计算每种攻击类型占所有攻击类型的百分比
             total_count_sum = sum(total_counts.values())
-            for attack_type, count in total_counts.items():
-                total_counts[attack_type] = {
-                    'count': count,
-                    'percentage': round(count / total_count_sum * 100, 2)
-                }
+            if total_count_sum != 0:
+                for attack_type, count in total_counts.items():
+                    total_counts[attack_type] = {
+                        'count': count,
+                        'percentage': round(count / total_count_sum * 100, 2)
+                    }
+            else:
+                for attack_type, count in total_counts.items():
+                    total_counts[attack_type] = {
+                        'count': count,
+                        'percentage': 0
+                    }
 
             # # 将每种攻击类型的总数量和百分比添加到返回结果中
             # attack_type_counts.append({'total_counts': total_counts})

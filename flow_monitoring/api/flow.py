@@ -1,6 +1,7 @@
 from response import CustomResponse, ERROR_CODES
 from http import HTTPStatus
-from datetime import datetime,timedelta
+from datetime import timedelta
+from django.utils import timezone
 from rest_framework.views import APIView
 from flow_monitoring.models import NetworkTraffic
 
@@ -9,7 +10,7 @@ class FlowAPIView(APIView):
         try:
             query_count = int(request.GET.get('count', 1))
 
-            # 从数据库中获取最新的count条数据
+            # 从数据库中获取最新的数据
             latest_data = NetworkTraffic.objects.order_by('-timestamp')[:query_count + 1]
 
             database_count = len(latest_data)
@@ -20,7 +21,7 @@ class FlowAPIView(APIView):
                 traffic_data = latest_data[i].total_packets - latest_data[i + 1].total_packets
                 total_traffic_data.append({'time': latest_data[i].timestamp, 'traffic': traffic_data})
 
-            history_time = latest_data[database_count-1].timestamp
+            history_time = latest_data[database_count-1].timestamp if database_count-1 > 0 else timezone.now()
 
             # 填充total_traffic_data到query_count条
             while len(total_traffic_data) < query_count:

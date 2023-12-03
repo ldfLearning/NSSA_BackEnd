@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'abnormal_attack',
     'asset_management',
     'risk_analysis',
-    'emergency_response',
     'flow_monitoring',
     'incident_response'
 ]
@@ -92,13 +91,9 @@ WSGI_APPLICATION = 'web.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'nssa-database',
-        'USER': 'nssa',
-        'PASSWORD': 'c317c317',
-        'HOST': '222.20.126.128',
-        'PORT': '3366',
-    }
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': BASE_DIR / 'db.sqlite3',
+   }
 }
 
 

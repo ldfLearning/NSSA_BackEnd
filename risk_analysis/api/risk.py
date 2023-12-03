@@ -2,7 +2,7 @@ from http import HTTPStatus
 from rest_framework.views import APIView
 from response import CustomResponse, ERROR_CODES
 #假设其他组的模型表已经建好
-from asset_management.models import AssetService
+# from asset_management.models import AssetService #目前自建的资产表已经删除，等资产管理组的表建后移除注释即可
 from abnormal_attack.models import AbnormalTraffic,AbnormalHost,AbnormalUser
 
 class RiskAnalysisAPIView(APIView):
@@ -30,15 +30,16 @@ class RiskAnalysisAPIView(APIView):
 
             #脆弱性
             vulnerability_value = 0 
-            #脆弱性分数是根据异常用户、异常主机和资产端口开放情况来评估
-            services = AssetService.objects.filter(ip=asset_ip)  # 根据资产ID获取资产服务信息
-            ports = [service.port for service in services]  # 获取所有端口
+            #目前自建的资产表已经删除，等资产管理组的表建后移除注释即可
+            # #脆弱性分数是根据异常用户、异常主机和资产端口开放情况来评估
+            # services = AssetService.objects.filter(ip=asset_ip)  # 根据资产ID获取资产服务信息
+            # ports = [service.port for service in services]  # 获取所有端口
 
-            # 危险端口列表
-            dangerous_ports = [20, 21, 22, 23, 25, 53, 110, 143, 3306, 3389, 5432]
-            # 计算脆弱值
-            vulnerable_ports = [port for port in ports if port in dangerous_ports]
-            vulnerability_value += len(vulnerable_ports)*2
+            # # 危险端口列表
+            # dangerous_ports = [20, 21, 22, 23, 25, 53, 110, 143, 3306, 3389, 5432]
+            # # 计算脆弱值
+            # vulnerable_ports = [port for port in ports if port in dangerous_ports]
+            # vulnerability_value += len(vulnerable_ports)*2
             
             user_count = AbnormalUser.objects.filter(src_ip=asset_ip,type=1).count()  # 查询异常用户
             vulnerability_value += user_count*3

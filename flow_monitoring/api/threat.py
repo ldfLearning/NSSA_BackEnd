@@ -27,27 +27,35 @@ class ThreatAPIView(APIView):
             end_date = datetime.now().date()
             start_date = end_date - timedelta(days=6)
 
-            # 创建一个空的列表，用于存储每天每种攻击类型的数量统计
-            attack_type_counts = []
-
             # 查询每一天每种攻击类型的数量
+            attack_type_counts = {
+                'DDoS': [],
+                'Webshell': [],
+                'Botnet': [],
+                'Trojan': [],
+                'Worm': [],
+                'Virus': [],
+                'SQL Injection': [],
+                'XML Injection': [],
+                'XSS': [],
+                'Port Scan': [],
+                '异常用户': [],
+                '异常主机': []
+            }
+
             total_counts = {}
+
             current_date = start_date
             while current_date <= end_date:
-                daily_counts = {'date': current_date}
-                count_methods = [self.getAbnormalTrafficCount, self.getAbnormalUserCount, self.getAbnormalHostCount]
-                for method in count_methods:
+                for method in [self.getAbnormalTrafficCount, self.getAbnormalUserCount, self.getAbnormalHostCount]:
                     counts = method(current_date)
-                    daily_counts.update(counts)
-
-                    # 统计每种攻击类型的总数量
                     for attack_type, count in counts.items():
-                        total_counts[attack_type] = total_counts.get(attack_type, 0) + count
+                         attack_type_counts[attack_type].append(count)
+                         total_counts[attack_type] = total_counts.get(attack_type, 0) + count
 
-                attack_type_counts.append(daily_counts)
                 current_date += timedelta(days=1)
 
-            # 计算每种攻击类型占所有攻击类型的百分比
+             # 计算每种攻击类型占所有攻击类型的百分比
             total_count_sum = sum(total_counts.values())
             if total_count_sum != 0:
                 for attack_type, count in total_counts.items():
@@ -62,11 +70,8 @@ class ThreatAPIView(APIView):
                         'percentage': 0
                     }
 
-            # # 将每种攻击类型的总数量和百分比添加到返回结果中
-            # attack_type_counts.append({'total_counts': total_counts})
-
             return CustomResponse(data={
-                'all_daily_counts':attack_type_counts,
+                'attack_type_counts':attack_type_counts,
                 'total_counts':total_counts,
                 })
         except Exception as e:

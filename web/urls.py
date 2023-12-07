@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/abnormal_attack/', include('abnormal_attack.urls')),
     path('api/incident_response/', include('incident_response.urls')),
-    path('api/risk/', include('risk_analysis.urls')),
-    path('api/flowMonitor/', include('flow_monitoring.urls')),
+    path('api/risk_analysis/', include('risk_analysis.urls')),
+    path('api/flow_monitoring/', include('flow_monitoring.urls')),
+    path('asset-management/', include('asset_management.urls'))
 ]

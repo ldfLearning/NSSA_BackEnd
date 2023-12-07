@@ -4,7 +4,7 @@ from response import CustomResponse, ERROR_CODES,ERROR_MESSAGES
 from risk_analysis.models import AssetRisk
 from risk_analysis.serializers import AssetRiskSerializer
 #假设其他组的模型表已经建好
-from asset_management.models import AssetService #目前自建的资产表已经删除，等资产管理组的表建后移除注释即可
+from asset_management.models import AssetService 
 from abnormal_attack.models import AbnormalTraffic,AbnormalHost,AbnormalUser
 
 class RiskAPIView(APIView):

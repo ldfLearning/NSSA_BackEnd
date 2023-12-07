@@ -35,7 +35,7 @@ class EmailSettingsAPIView(APIView):
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
 
-# 测试邮件发送 
+# 测试邮件发送,后面不用删除即可
 class EmailSendAPIView(APIView):
     def getEmailSettings(self):
         try:

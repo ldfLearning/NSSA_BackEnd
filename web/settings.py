@@ -37,13 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_crontab',#定时监测，必须要添加到前面，不能接着app后面添加，否则会报错
     # 在此注册各模块的app
     'rest_framework',
     'abnormal_attack',
     'risk_analysis',
     'flow_monitoring',
-    'incident_response'
+    'incident_response',
+    'asset_management'
 ]
 
 MIDDLEWARE = [
@@ -81,23 +81,23 @@ WSGI_APPLICATION = 'web.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-# }
-
 DATABASES = {
-     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'nssa-database',
-        'USER': 'nssa',
-        'PASSWORD': 'c317c317',
-        'HOST': '222.20.126.128',
-        'PORT': '3366',
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': BASE_DIR / 'db.sqlite3',
+   }
 }
+
+# DATABASES = {
+#      'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'nssa-database',
+#         'USER': 'nssa',
+#         'PASSWORD': 'c317c317',
+#         'HOST': '222.20.126.128',
+#         'PORT': '3366',
+#     }
+# }
 
 
 
@@ -143,14 +143,6 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-#python manage.py crontab add 项目启动时执行，如果已经存在，不用再次执行
-#python manage.py crontab remove 项目关闭后执行，不然一直定时检测
-#相对路径在CRON作业中不可行，因为CRON作业的工作目录可能与期望的工作目录不同，导致相对路径无法正确解析，
-#下面路径记得更改为当前项目的路径下
-CRONJOBS = [
-    ('*/2 * * * *', 'flow_monitoring.tasks.set_traffic_value','>>/home/c415/ldf/NSSA_BackEnd/traffic.log'),  # 每2分钟执行一次,日志记录函数打印内容
-]
 
 # 发送邮件设置
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

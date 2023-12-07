@@ -37,8 +37,9 @@ MSG_TYPE_USER = 2
 # 查询最后一条的邮件设置记录
 def getEmailSettings():
     try:
-        latest_email_settings = EmailSettings.objects.latest('id')
-        return latest_email_settings
+        # 获取唯一的 EmailSettings 记录
+        email_settings = EmailSettings.objects.get()
+        return email_settings
     except Exception as e:
         print(e)
 

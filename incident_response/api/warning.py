@@ -114,8 +114,6 @@ class IncidentEventListAPIView(APIView):
                 data={},
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
-        
-         # 新增
       
       #增加，可能不需要这个api
       def post(self, request):

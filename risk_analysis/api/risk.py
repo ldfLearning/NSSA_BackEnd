@@ -1,56 +1,91 @@
 from http import HTTPStatus
 from rest_framework.views import APIView
-from response import CustomResponse, ERROR_CODES
+from response import CustomResponse, ERROR_CODES,ERROR_MESSAGES
+from risk_analysis.models import AssetRisk
+from risk_analysis.serializers import AssetRiskSerializer
 #假设其他组的模型表已经建好
-# from asset_management.models import AssetService #目前自建的资产表已经删除，等资产管理组的表建后移除注释即可
+from asset_management.models import AssetService #目前自建的资产表已经删除，等资产管理组的表建后移除注释即可
 from abnormal_attack.models import AbnormalTraffic,AbnormalHost,AbnormalUser
 
-class RiskAnalysisAPIView(APIView):
-    #风险值 = R(A, T, V) = R(L(T, V), F(Ia, Va ))
-    def post(self, request):  # 处理前端发送过来的post请求
-        asset_ip = request.data.get('assetIp')  # 获取资产IP
-        asset_value = request.data.get('assetValue')  # 获取资产价值
-
+class RiskAPIView(APIView):
+     #从表查询
+    def get(self,request):
         try:
+            asset_id = request.GET.get('asset_id')  # 获取资产id
+            asset_risk = AssetRisk.objects.get(asset_id=asset_id)
+            serializer = AssetRiskSerializer(asset_risk)
+            return CustomResponse(data=serializer.data)
+        except AssetRisk.DoesNotExist:
+            return CustomResponse(
+                code=ERROR_CODES['NOT_FOUND'],
+                msg=ERROR_MESSAGES['NOT_FOUND'],
+                data={},
+                status=HTTPStatus.NOT_FOUND
+            )
+        
+    #新增资产id，为了get请求和重新计算的api测试用，后面不需要这个api，删除即可
+    def post(self,request):
+        try:
+            asset_id = request.data.get('asset_id')  # 获取资产id
+            # 创建并保存 AssetRisk 对象，其他字段默认为0
+            AssetRisk.objects.create(asset_id=asset_id)
+            return CustomResponse()
+        except AssetRisk.DoesNotExist:
+            return CustomResponse(
+                code=ERROR_CODES['NOT_FOUND'],
+                msg=ERROR_MESSAGES['NOT_FOUND'],
+                data={},
+                status=HTTPStatus.NOT_FOUND
+            )
+
+class RiskCalculationAPIView(APIView):
+    DANGEROUS_PORTS = [20, 21, 22, 23, 25, 53, 110, 143, 3306, 3389, 5432]
+    PORT_VULNERABILITY_WEIGHT = 2
+    USER_VULNERABILITY_WEIGHT = 3
+    HOST_VULNERABILITY_WEIGHT = 5
+
+    def calculate_vulnerability_value(self, asset_ip):
+        services = AssetService.objects.filter(ip=asset_ip)
+        ports = [service.port for service in services]
+
+        vulnerable_ports = [port for port in ports if port in self.DANGEROUS_PORTS]
+        port_vulnerability = len(vulnerable_ports) * self.PORT_VULNERABILITY_WEIGHT
+
+        user_count = AbnormalUser.objects.filter(src_ip=asset_ip, type=1).count()
+        user_vulnerability = user_count * self.USER_VULNERABILITY_WEIGHT
+
+        host_count = AbnormalHost.objects.filter(ip=asset_ip).count()
+        host_vulnerability = host_count * self.HOST_VULNERABILITY_WEIGHT
+
+        total_vulnerability = port_vulnerability + user_vulnerability + host_vulnerability
+        return total_vulnerability
+
+    #计算风险值
+    def post(self, request):
+        try:
+            asset_id = request.data.get('asset_id') # 获取资产id
+            asset_value = request.data.get('asset_value') # 获取资产价值
+            asset_ip = AssetService.objects.get(asset_id=asset_id).ip #从资产id里面获取资产ip，一个资产id只有一个资产ip
+
             #威胁性
             total_threat_value = 0
-            T = 0
-            flow_count = AbnormalTraffic.objects.count()  # 获取AbnormalTraffic的所有记录数量
+            flow_count = AbnormalTraffic.objects.count()
             ip_flows = AbnormalTraffic.objects.filter(src_ip=asset_ip)
             ip_flows_count = ip_flows.count()
 
             #威胁出现频率(T)
-            if flow_count != 0:
-                 T = ip_flows_count / flow_count
-            
+            T = ip_flows_count / flow_count if flow_count != 0 else 0
+
             #根据异常流量类型计算威胁值
             for flow in ip_flows:
                 threat_value = flow.type+1
                 total_threat_value += threat_value
 
             #脆弱性
-            vulnerability_value = 0 
-            #目前自建的资产表已经删除，等资产管理组的表建后移除注释即可
-            # #脆弱性分数是根据异常用户、异常主机和资产端口开放情况来评估
-            # services = AssetService.objects.filter(ip=asset_ip)  # 根据资产ID获取资产服务信息
-            # ports = [service.port for service in services]  # 获取所有端口
+            vulnerability_value = self.calculate_vulnerability_value(asset_ip)
 
-            # # 危险端口列表
-            # dangerous_ports = [20, 21, 22, 23, 25, 53, 110, 143, 3306, 3389, 5432]
-            # # 计算脆弱值
-            # vulnerable_ports = [port for port in ports if port in dangerous_ports]
-            # vulnerability_value += len(vulnerable_ports)*2
-            
-            user_count = AbnormalUser.objects.filter(src_ip=asset_ip,type=1).count()  # 查询异常用户
-            vulnerability_value += user_count*3
+            V = 1 - 1 / (vulnerability_value + 1)
 
-            host_count = AbnormalHost.objects.filter(ip=asset_ip).count()  # 查询异常主机
-            vulnerability_value += host_count*5
-
-            #脆弱性(V) 
-            V = 1-1/(vulnerability_value+1)
-
-            #风险
             L = T + V
             F = asset_value * L
             R = F * total_threat_value
@@ -58,15 +93,24 @@ class RiskAnalysisAPIView(APIView):
             data = {
                 'total_threat_value': total_threat_value,
                 'Va': vulnerability_value,
-                'R':round(R)
+                'R': round(R)
             }
+
+            #更新表数据
+            AssetRisk.objects.filter(asset_id=asset_id).update(
+                asset_value=asset_value,
+                threat_value=total_threat_value,
+                vulnerability_value=vulnerability_value,
+                risk_value=round(R)
+            )
 
             return CustomResponse(data=data)
 
         except Exception as e:
-              return CustomResponse(
+            return CustomResponse(
                 code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
                 msg=str(e),
                 data={},
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
+        

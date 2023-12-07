@@ -37,7 +37,6 @@ class EmailSettingsAPIView(APIView):
 
 # 测试邮件发送 
 class EmailSendAPIView(APIView):
-    # 查询最后一条的记录
     def getEmailSettings(self):
         try:
             # 获取唯一的 EmailSettings 记录

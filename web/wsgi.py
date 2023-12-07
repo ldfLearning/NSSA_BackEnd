@@ -34,7 +34,6 @@ MSG_TYPE_TRAFFIC = 0
 MSG_TYPE_HOST = 1
 MSG_TYPE_USER = 2
 
-# 查询最后一条的邮件设置记录
 def getEmailSettings():
     try:
         # 获取唯一的 EmailSettings 记录

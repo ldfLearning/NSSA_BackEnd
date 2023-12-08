@@ -16,5 +16,10 @@ __pycache__/
 .vscode/
 .idea/
 
-# Django
-migrations/
+#Django
+# Ignore all migration files except for the migrations folder and __init__.py
+**/migrations/*
+!**/migrations/__init__.py
+
+# database
+db.sqlite3

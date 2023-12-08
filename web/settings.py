@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-u%gh&47vyr05-@nddy&vy4$mnjx203-nhk%d1bhf%)q2bf1pe1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*''*']
 
 
 # Application definition
@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     # 在此注册各模块的app
     'rest_framework',
     'abnormal_attack',
-    'asset_management',
-
+    'risk_analysis',
+    'flow_monitoring',
+    'incident_response',
+    'asset_management'
 ]
 
 MIDDLEWARE = [
@@ -82,28 +84,24 @@ WSGI_APPLICATION = 'web.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'AssetManagement',
-        'USER': 'root',
-        'PASSWORD': '12345',
-        'HOST': '127.0.0.1',
-    },
-    'database_deskdevice': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'iNCManager',
-        'USER': 'root',
-        'PASSWORD': '12345',
-        'HOST': '127.0.0.1',
-    },
+   'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': BASE_DIR / 'db.sqlite3',
+   }
 }
 
-DATABASE_APPS_MAPPING = {
-    # "user_manage": "default",
-    "iNCManager": "database_deskdevice",
-}
+# DATABASES = {
+#      'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'nssa-database',
+#         'USER': 'nssa',
+#         'PASSWORD': 'c317c317',
+#         'HOST': '222.20.126.128',
+#         'PORT': '3366',
+#     }
+# }
 
-DATABASE_ROUTERS = ['web.router.DatabaseAppsRouter']
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -147,3 +145,22 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 发送邮件设置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# SMTP地址
+EMAIL_HOST = 'smtp.qq.com'
+# SMTP端口
+EMAIL_PORT = 25
+# 发送邮箱
+EMAIL_HOST_USER = ''
+# 发送邮箱授权码，非密码
+EMAIL_HOST_PASSWORD = ''
+
+EMAIL_USE_TLS = True  # 是否使用TLS加密
+
+# 添加一个变量，用于存储默认网卡的名称
+DEFAULT_NETWORK_INTERFACE = 'eno1'
+
+
+

@@ -11,6 +11,7 @@ class Situation(models.Model):
     fourth_situation_value = models.FloatField(default=1000)
     fifth_situation_value = models.FloatField(default=1000)
     prediction_value = models.FloatField(default=1000)
+    create_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "situation_prediction_value"

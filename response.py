@@ -5,7 +5,10 @@ ERROR_CODES = {
     'AUTHENTICATION_FAILED': 1002,
     'PERMISSION_DENIED': 1003,
     # 其他错误码定义...
-    'INVALID_REQUEST': 1004
+    'INVALID_REQUEST': 1004,
+    'PREDICTION_ERROR': 1005,
+    'DATABASE_ERROR': 1006,
+
 }
 
 ERROR_MESSAGES = {
@@ -13,7 +16,9 @@ ERROR_MESSAGES = {
     'AUTHENTICATION_FAILED': 'Authentication failed',
     'PERMISSION_DENIED': 'Permission denied',
     # 其他错误信息定义...
-    'INVALID_REQUEST': 'Invalid request'
+    'INVALID_REQUEST': 'Invalid request',
+    'PREDICTION_ERROR': 'Situation Prediction error',
+    'DATABASE_ERROR': 'Database error',
 }
 
 class CustomResponse(Response):

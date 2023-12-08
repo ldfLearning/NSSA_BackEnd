@@ -1,71 +1,81 @@
-import datetime
+import numpy as np
+from keras.models import load_model
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from abnormal_attack.models import AbnormalTraffic
-from abnormal_attack.serializers import AbnormalTrafficSerializer
+from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
 from situation_prediction.models import Situation
 from situation_prediction.serializers import SituationSerializer
-
-DEFAULT_SITUATION_VALUE = 1000
-# 默认态势倍率
-DEFAULT_SITUATION_TIMES = 100
+from situation_prediction.utils import calculate_situation_value, MinMaxScaler, MinMaxInverseScaler
 
 
-# 统计攻击类型的数量
-def calculate_attack_num(serialized_data):
-    attack_score = {
-        0: 7,
-        1: 9,
-        2: 5,
-        3: 9,
-        4: 9,
-        5: 9,
-        6: 6,
-        7: 4,
-        8: 3,
-        9: 3
-    }
-    attack_num = 0
-    for data in serialized_data:
-        attack_type = data['type']
-        attack_num += attack_score[attack_type] * DEFAULT_SITUATION_TIMES
-    return attack_num + DEFAULT_SITUATION_VALUE
-
-
-def calculate_situation_value(history_step):
-    current_system_time = datetime.datetime.now()
-    situation_value_list = []
-    for i in range(1, history_step + 1):
-        front_time = current_system_time - datetime.timedelta(minutes=i - 1)
-        back_time = current_system_time - datetime.timedelta(minutes=i)
-        res = AbnormalTraffic.objects.all().order_by('-time').filter(time__range=[back_time, front_time])
-        ser = AbnormalTrafficSerializer(res, many=True)
-        if not ser.data:
-            situation_value_list.append(DEFAULT_SITUATION_VALUE)
-        else:
-            situation_value_list.append(calculate_attack_num(ser.data))
-    return situation_value_list
-
-
-def load_predict_model():
+def load_predict_model(real_data, max_situ_value=5000, min_situ_value=1000):
     """
-    Load predict model.
+    Load predict model and predict situation value.
     """
-    # model = load_model('tcn_gcn_model.h5')
-    # scaler = MinMaxScaler(feature_range=(0, 1))
-    # test_X = [[4000], [5000], [4700], [4500], [4000]]
-    # testX = scaler.fit_transform(np.array(test_X).reshape(-1, 1))
-    # #
-    # test_predict = model.predict(np.array([testX]))
-    # print(test_predict)
+    processed_data = []
+    for data in real_data:
+        processed_data.append([data])
+    model = load_model('situation_prediction/model/tcn_gcn_model.keras')
+    scaled_data = MinMaxScaler(np.array(processed_data), min_situ_value, max_situ_value)
 
+    predict = model(np.array([scaled_data])).numpy()
+    predict_value = MinMaxInverseScaler(predict, min_situ_value, max_situ_value)[0][0]
+
+    return predict_value
 
 
 class SituationPredictionView(APIView):
+    throttle_scope = 'get_situation_prediction'  # 限制访问频率 一分钟一次
 
     def get(self, request):
         """
         Get situation prediction value.
         """
-        return Response({"code": 0, "msg": "success", "data": calculate_situation_value(5)})
+        predict_step = 5
+        try:
+            situation_value = calculate_situation_value(predict_step)
+            predict_result = load_predict_model(situation_value)
+        except:
+            return CustomResponse({"code": ERROR_CODES['PREDICTION_ERROR'], "msg": ERROR_MESSAGES['PREDICTION_ERROR'],
+                                   "data": {
+                                       "situation_value": None,
+                                       "predict_result": None
+                                   }})
+        # 将结果存入数据库
+        try:
+            # 将situation_value和predict_result结果合并存入数据库
+            situation_value.reverse()
+            situation = Situation(first_situation_value=situation_value[0],
+                                  second_situation_value=situation_value[1],
+                                  third_situation_value=situation_value[2],
+                                  fourth_situation_value=situation_value[3],
+                                  fifth_situation_value=situation_value[4],
+                                  prediction_value=predict_result)
+            situation.save()
+        except:
+            return CustomResponse({"code": ERROR_CODES['DATABASE_ERROR'], "msg": ERROR_MESSAGES['DATABASE_ERROR'],
+                                   "data": None})
+        return CustomResponse(data={
+            "situation_value": situation_value,
+            "predict_result": predict_result
+        })
+
+
+class SituationPredictionHistoryView(APIView):
+
+    def get(self, request):
+        """
+        Get situation prediction history data.
+        """
+        try:
+            situation_history = Situation.objects.all().order_by('-create_time')[:5]
+            # 序列化数据
+            ser = SituationSerializer(situation_history, many=True)
+        except:
+            return CustomResponse({"code": ERROR_CODES['DATABASE_ERROR'], "msg": ERROR_MESSAGES['DATABASE_ERROR'],
+                                   "data": None})
+
+        return CustomResponse(data={
+            "situation_history": ser.data
+        })

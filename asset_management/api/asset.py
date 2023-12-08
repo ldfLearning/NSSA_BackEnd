@@ -4,6 +4,7 @@ from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
 from rest_framework.views import APIView
 from asset_management.models import *
 from asset_management.serializers import AssetSerializer
+from risk_analysis.models import AssetRisk
 from rest_framework.response import Response
 
 
@@ -49,6 +50,9 @@ class AssetBasicView(APIView):
             ser = AssetSerializer(instance=resdata, many=True)
             total = len(reschosen)
             totalPage = total // pageSize + 1
+            ret_data = ser.data
+            for eve in ret_data:
+                eve["asset_value"] = AssetRisk.objects.get(asset_id=eve["id"]).asset_value
         except Exception as e:
             print(e)
             return CustomResponse(
@@ -57,14 +61,16 @@ class AssetBasicView(APIView):
                 data={},
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
-        data = {'total': total, 'totalPage': totalPage, 'nowPage': page, 'list': ser.data}
+        data = {'total': total, 'totalPage': totalPage, 'nowPage': page, 'list': ret_data}
         return CustomResponse(
             data=data
         )
 
     def post(self, request):
         try:
-            asset_toadd = AssetSerializer(data=request.data)
+            request_data_asset = request.data
+            # del request_data_asset["asset_value"]
+            asset_toadd = AssetSerializer(data=request_data_asset)
         except Exception as e:
             return CustomResponse(
                 code=ERROR_CODES['BAD_REQUEST'],
@@ -80,8 +86,23 @@ class AssetBasicView(APIView):
                 status=HTTPStatus.BAD_REQUEST
             )
         asset_toadd.save()
+        the_asset_id = asset_toadd.instance.id
+        the_asset = Asset.objects.get(id=the_asset_id)
+        try:
+            AssetRisk.objects.create(asset_id=the_asset.id, asset_value=request.data["asset_value"], threat_value=0, vulnerability_value=0, risk_value=0)
+        except Exception as e:
+            the_asset.delete()
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=ERROR_MESSAGES['INTERNAL_SERVER_ERROR'],
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+        ret_data = asset_toadd.data
+        ret_data["asset_value"] = request.data["asset_value"]
         return CustomResponse(
-            data=asset_toadd.data
+            # data=asset_toadd.data
+            data=ret_data
         )
 
     def put(self, request):
@@ -104,9 +125,23 @@ class AssetBasicView(APIView):
                 data={},
                 status=HTTPStatus.BAD_REQUEST
             )
-        ser.save()
+        try:
+            ser.save()
+            the_assetrisk = AssetRisk.objects.get(asset_id=pick)
+            the_assetrisk.asset_value = request.data["asset_value"]
+            the_assetrisk.save()
+        except Exception as e:
+            return CustomResponse(
+                code=ERROR_CODES['BAD_REQUEST'],
+                msg=ERROR_MESSAGES['BAD_REQUEST'],
+                data={},
+                status=HTTPStatus.BAD_REQUEST
+            )
+        ret_data = ser.data
+        ret_data["asset_value"] = request.data["asset_value"]
         return CustomResponse(
-            data=ser.data
+            # data=ser.data
+            data=ret_data
         )
 
     def delete(self, request):
@@ -118,6 +153,8 @@ class AssetBasicView(APIView):
             print(serviceList)
             for service in serviceList:
                 service.delete()
+            assetrisk = AssetRisk.objects.get(asset_id=pick)
+            assetrisk.delete()
         except Exception as e:
             return CustomResponse(
                 code=ERROR_CODES['BAD_REQUEST'],

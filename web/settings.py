@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-u%gh&47vyr05-@nddy&vy4$mnjx203-nhk%d1bhf%)q2bf1pe1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*''*']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -98,10 +98,22 @@ DATABASES = {
 #         'PASSWORD': 'c317c317',
 #         'HOST': '222.20.126.128',
 #         'PORT': '3366',
+#     },
+#     'database_deskdevice': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'iNCManager',
+#         'USER': 'root',
+#         'PASSWORD': '12345',
+#         'HOST': '127.0.0.1',
 #     }
 # }
+    
+DATABASE_APPS_MAPPING = {
+    # "user_manage": "default",
+    "iNCManager": "database_deskdevice",
+}
 
-
+DATABASE_ROUTERS = ['web.router.DatabaseAppsRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

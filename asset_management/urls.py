@@ -34,10 +34,3 @@ urlpatterns = [
     path("jtopo/asset/", JtopoAssetView.as_view()),  # 与前端交互网络拓扑json数据
     path("jtopo/auto/", JtopoAutoView.as_view()),  # 自动生成拓扑图
 ]
-from django.urls import path
-
-from asset_management.api.assetservice import AssetServiceBasicView
-
-urlpatterns = [
-    path("assetservice/", AssetServiceBasicView.as_view()),  # 资产服务信息表基本增删改查
-]

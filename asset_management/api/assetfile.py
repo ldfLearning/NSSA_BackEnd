@@ -8,11 +8,11 @@ from django.db import transaction
 from django.http import HttpResponse, JsonResponse
 from rest_framework.views import APIView
 from asset_management.models import *
-
+from risk_analysis.models import AssetRisk
 from asset_management.file import fileOut
 
 
-# 本文件中的函数负责单位部门的文件导出和导入
+# 本文件中的函数负责资产部分的文件导出和导入
 class AssetFileView(APIView):
     def get(self, request):  # 从数据库取出信息，返回到前端
         res = {'code': 0, 'msg': '导出成功'}
@@ -56,11 +56,23 @@ class AssetFileView(APIView):
 def assetFileOut():  # 将数据库中的主机信息导出到excel文件
     # 表头内容
     columns = ['ID', '资产IP', '资产名称', '位置', '设备SN', '设备厂商', '设备类型', '设备工作时长', 'CPU使用率', '剩余内存空间',
-               '剩余硬盘空间', '网速', '操作系统', 'MAC地址', '更新时间', '所属产线ID']
+               '剩余硬盘空间', '网速', '操作系统', 'MAC地址', '更新时间', '所属产线ID', '资产价值']
     # 获取数据库数据
     rows = Asset.objects.all().values_list('id', 'ip', 'name', 'position', 'device_sn', 'device_vendor', 'device_type',
                                            'device_working_hours', 'cpu_used', 'remain_mem', 'remain_harddisk',
                                            'network_speed', 'os', 'mac', 'update_time', 'productionline_id')
+
+    # 资产风险
+    rows = list(rows)
+    for i in range(len(rows)):
+        row_list = list(rows[i])
+        qs = AssetRisk.objects.filter(asset_id=row_list[0]) # id
+        if len(qs) != 0:
+            row_list.append(AssetRisk.objects.get(asset_id=row_list[0]).asset_value)
+        else:
+            row_list.append("")
+        rows[i] = tuple(row_list)
+
     return fileOut(columns, rows, 'Asset')
 
 
@@ -101,6 +113,14 @@ def assetFileIn(f):
                         asset.update_time = rowValues[14]
                         asset.productionline_id = rowValues[15]
                     asset.save()
+                    # 资产风险部分
+                    riskList = AssetRisk.objects.filter(asset_id=asset.id)
+                    if len(riskList) == 0:
+                        risk = AssetRisk(asset_id=asset.id, asset_value=rowValues[16])
+                    else:
+                        risk = AssetRisk.objects.get(asset_id=asset.id)
+                        risk.asset_value = rowValues[16]
+                    risk.save()
         except Exception as e:
             print(e)
             # 导入过程出现错误

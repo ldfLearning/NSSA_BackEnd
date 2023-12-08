@@ -20,6 +20,8 @@ application = get_wsgi_application()
 
 # 在此处定义需要启动时运行的方法
 
+desk_device_update_scheduler()
+
 import pickle
 import json
 

@@ -4,6 +4,7 @@ from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
 from asset_management.models import *
 from asset_management.scan.nmap_alive import scanNetwork
 from asset_management.serializers import AssetSerializer
+from risk_analysis.models import AssetRisk
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -78,6 +79,12 @@ def addToDB(info):  # 分析单机扫描的结果，将主机信息和主机服�
         h1.mac = info['mac']
         h1.update_time = info['update_time']
         h1.save()
+    # 资产风险表处理
+    qs = AssetRisk.objects.filter(asset_id=h1.id)
+    if len(qs) == 0:  # 如果不存在,则直接插入；如果存在，则不做额外操作
+        r1 = AssetRisk(asset_id=h1.id)
+        r1.save()
+    #
     for tcp_port in info['tcp_ports']:
         qs = AssetService.objects.filter(ip=info['ip'], port=tcp_port)  # 在数据库中查找对应ip和端口的主机服务信息
         asset_chosen = Asset.objects.get(ip=info['ip'])

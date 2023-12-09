@@ -8,7 +8,10 @@ ERROR_CODES = {
     'INVALID_REQUEST': 1004,
     'PREDICTION_ERROR': 1005,
     'DATABASE_ERROR': 1006,
-
+    'BAD_REQUEST': 1007,
+    'INTERNAL_SERVER_ERROR': 1008,
+    'NOT_ACCEPTABLE': 1009,
+    'PRECONDITION_FAILED': 1010,
 }
 
 ERROR_MESSAGES = {
@@ -19,7 +22,12 @@ ERROR_MESSAGES = {
     'INVALID_REQUEST': 'Invalid request',
     'PREDICTION_ERROR': 'Situation Prediction error',
     'DATABASE_ERROR': 'Database error',
+    'BAD_REQUEST': 'Bad request',
+    'INTERNAL_SERVER_ERROR': 'Internal server error',
+    'NOT_ACCEPTABLE': 'Not acceptable',
+    'PRECONDITION_FAILED': 'Precondition failed',
 }
+
 
 class CustomResponse(Response):
     def __init__(self, code=0, msg='success', data=None, status=None,

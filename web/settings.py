@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_apscheduler',
+
     # 在此注册各模块的app
     'rest_framework',
     'abnormal_attack',
@@ -98,10 +100,22 @@ DATABASES = {
 #         'PASSWORD': 'c317c317',
 #         'HOST': '222.20.126.128',
 #         'PORT': '3366',
+#     },
+#     'database_deskdevice': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'iNCManager',
+#         'USER': 'root',
+#         'PASSWORD': '12345',
+#         'HOST': '127.0.0.1',
 #     }
 # }
+    
+DATABASE_APPS_MAPPING = {
+    # "user_manage": "default",
+    "iNCManager": "database_deskdevice",
+}
 
-
+DATABASE_ROUTERS = ['web.router.DatabaseAppsRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

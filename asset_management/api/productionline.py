@@ -2,18 +2,17 @@ from http import HTTPStatus
 from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
 
 from rest_framework.views import APIView
-from asset_management.models import AssetService
-from asset_management.serializers import AssetServiceSerializer
+from asset_management.models import *
+from asset_management.serializers import ProductionlineSerializer
 from rest_framework.response import Response
 
 
-class AssetServiceBasicView(APIView):
+class ProductionlineBasicView(APIView):
     def get(self, request):
         try:
             query = request.query_params.dict()
             page = int(query['page'])
             pageSize = int(query['pageSize'])
-            assetid = int(query['assetid'])
             content = str(query['content'])
         except Exception as e:
             print(e)
@@ -24,24 +23,18 @@ class AssetServiceBasicView(APIView):
                 status=HTTPStatus.BAD_REQUEST
             )
         try:
-            resall = AssetService.objects.filter(asset_id=assetid)
+            resall = Productionline.objects.all()
             reschosen = []
             for i in resall:
                 if ((str(i.id).find(content) != -1)
-                        or (str(i.asset_id).find(content) != -1)
-                        or (i.ip.find(content) != -1)
-                        or (str(i.port).find(content) != -1)
                         or (i.name.find(content) != -1)
-                        or (i.state.find(content) != -1)
-                        or (i.product.find(content) != -1)
-                        or (i.version.find(content) != -1)
-                        or (i.cpe.find(content) != -1)
-                        or (i.extrainfo.find(content) != -1)
-                        or (i.update_time.find(content) != -1)):
+                        or (str(i.workshop_id).find(content) != -1)
+                        or (i.shortened.find(content) != -1)
+                        or (str(i.asset_number).find(content) != -1)):
                     reschosen.append(i)
             resdata = reschosen[(page - 1) * pageSize: page * pageSize]
             print(resdata)
-            ser = AssetServiceSerializer(instance=resdata, many=True)
+            ser = ProductionlineSerializer(instance=resdata, many=True)
             total = len(reschosen)
             totalPage = total // pageSize + 1
         except Exception as e:
@@ -59,7 +52,7 @@ class AssetServiceBasicView(APIView):
 
     def post(self, request):
         try:
-            assetservice_toadd = AssetServiceSerializer(data=request.data)
+            productionline_toadd = ProductionlineSerializer(data=request.data)
         except Exception as e:
             return CustomResponse(
                 code=ERROR_CODES['BAD_REQUEST'],
@@ -67,24 +60,24 @@ class AssetServiceBasicView(APIView):
                 data={},
                 status=HTTPStatus.BAD_REQUEST
             )
-        if not assetservice_toadd.is_valid():
+        if not productionline_toadd.is_valid():
             return CustomResponse(
                 code=ERROR_CODES['BAD_REQUEST'],
                 msg=ERROR_MESSAGES['BAD_REQUEST'],
                 data={},
                 status=HTTPStatus.BAD_REQUEST
             )
-        assetservice_toadd.save()
+        productionline_toadd.save()
         return CustomResponse(
-            data=assetservice_toadd.data
+            data=productionline_toadd.data
         )
 
     def put(self, request):
         try:
             query = request.query_params.dict()
             pick = int(query['alternum'])
-            assetservice_chosen = AssetService.objects.get(pk=pick)
-            ser = AssetServiceSerializer(instance=assetservice_chosen, data=request.data)
+            productionline_chosen = Productionline.objects.get(pk=pick)
+            ser = ProductionlineSerializer(instance=productionline_chosen, data=request.data)
         except Exception as e:
             return CustomResponse(
                 code=ERROR_CODES['BAD_REQUEST'],
@@ -108,7 +101,11 @@ class AssetServiceBasicView(APIView):
         try:
             query = request.query_params.dict()
             pick = int(query['deletenum'])
-            AssetService.objects.get(pk=pick).delete()
+            Productionline.objects.get(pk=pick).delete()
+            assetList = Asset.objects.filter(productionline_id=pick)
+            for asset in assetList:
+                asset.productionline_id = 0
+                asset.save()
         except Exception as e:
             return CustomResponse(
                 code=ERROR_CODES['BAD_REQUEST'],

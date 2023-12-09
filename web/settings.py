@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'risk_analysis',
     'flow_monitoring',
     'incident_response',
-    'asset_management'
+    'asset_management',
+    'situation_prediction',
+
 ]
 
 MIDDLEWARE = [
@@ -134,18 +136,27 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'get_situation_prediction': '1/min',
+    }
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

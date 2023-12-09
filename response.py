@@ -6,10 +6,12 @@ ERROR_CODES = {
     'PERMISSION_DENIED': 1003,
     # 其他错误码定义...
     'INVALID_REQUEST': 1004,
-    'BAD_REQUEST': 1005,
-    'INTERNAL_SERVER_ERROR': 1006,
-    'NOT_ACCEPTABLE': 1007,
-    'PRECONDITION_FAILED': 1008,
+    'PREDICTION_ERROR': 1005,
+    'DATABASE_ERROR': 1006,
+    'BAD_REQUEST': 1007,
+    'INTERNAL_SERVER_ERROR': 1008,
+    'NOT_ACCEPTABLE': 1009,
+    'PRECONDITION_FAILED': 1010,
 }
 
 ERROR_MESSAGES = {
@@ -18,6 +20,8 @@ ERROR_MESSAGES = {
     'PERMISSION_DENIED': 'Permission denied',
     # 其他错误信息定义...
     'INVALID_REQUEST': 'Invalid request',
+    'PREDICTION_ERROR': 'Situation Prediction error',
+    'DATABASE_ERROR': 'Database error',
     'BAD_REQUEST': 'Bad request',
     'INTERNAL_SERVER_ERROR': 'Internal server error',
     'NOT_ACCEPTABLE': 'Not acceptable',

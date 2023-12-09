@@ -7,12 +7,15 @@ from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.views import APIView
 
+from http import HTTPStatus
+from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
+
 from asset_management.models import *
+from rest_framework.response import Response
 
 class DeskDeviceAPIView(APIView):
 
     def post(self, request):
-        res = {'code': 0, 'msg': '远程数据库资产-本地更新成功'}
         try:
             assetdeviceinfos = AssetDeviceInfo.objects.all()
             for assetdeviceinfo in assetdeviceinfos:
@@ -27,6 +30,12 @@ class DeskDeviceAPIView(APIView):
                         asset.device_type = deskdevice.device_type
                         asset.save()
         except Exception as e:
-            res['code'] = -1
-            res['msg'] = '远程数据库资产-本地更新失败'
-        return JsonResponse(res)
+            return CustomResponse(
+                code=ERROR_CODES['BAD_REQUEST'],
+                msg=ERROR_MESSAGES['BAD_REQUEST'],
+                data={},
+                status=HTTPStatus.BAD_REQUEST
+            )
+        return CustomResponse(
+            data={}
+        )

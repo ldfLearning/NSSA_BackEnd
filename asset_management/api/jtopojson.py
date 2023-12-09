@@ -4,20 +4,28 @@ import json
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.views import APIView
+
+from http import HTTPStatus
+from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
+
 from asset_management.tools.jtopotools import *
 from asset_management.models import *
-
+from rest_framework.response import Response
 
 class JtopoView(APIView):
 #
     def get(self, request):
         query = request.query_params.dict()
-        res = {'code': 200, 'msg': '获取网络拓扑成功', 'data': {}}
         topo_id = query['id']  # 请求参数中topo图的id
         filepath = getFilepath(topo_id)
         if filepath == '':
-            res['msg'] = '获取拓扑图路径失败'
-            return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # 获取拓扑图路径失败
+            return CustomResponse(
+                code=ERROR_CODES['BAD_REQUEST'],
+                msg=ERROR_MESSAGES['BAD_REQUEST'],
+                data={},
+                status=HTTPStatus.BAD_REQUEST
+            )
         try:
             # load_dict = generateTopoDict()
             # load_dict = readJson(filepath)
@@ -28,13 +36,19 @@ class JtopoView(APIView):
             # 由于有多张拓扑图，每次获取拓扑图都从数据库里读取设备列表
             load_dict['AssetList'] = generateDeviceList()
             writeJson(load_dict, filepath)
-            res['data'] = load_dict
-            return JsonResponse(res)
+            # res['data'] = load_dict
         except Exception as e:
             print(e)
-            res['code'] = -1
-            res['msg'] = '获取网络拓扑失败'
-            return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # 获取网络拓扑失败
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=str(e),
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+        return CustomResponse(
+            data=load_dict
+        )
         # filepath = "static/topo.json"
         # load_dict = readJson(filepath)
         # load_dict["AssetList"] = generateDeviceList()
@@ -43,13 +57,16 @@ class JtopoView(APIView):
 
     # post中实现判断子拓扑节点的id是否存在于数据库中，如果不存在就要创建对应的拓扑文件
     def post(self, request):
-        res = {'code': 200, 'msg': '保存网络拓扑成功', 'data': {}}
         data = json.loads(request.body)  # 前端传过来数据的为字符串，需要解析为json
         filepath = getFilepath(data['topology_id'])
         if filepath == '':
-            res['code'] = -1
-            res['msg'] = '拓扑id有误'
-            return JsonResponse(res, status=status.HTTP_406_NOT_ACCEPTABLE)
+            # 拓扑id有误
+            return CustomResponse(
+                code=ERROR_CODES['NOT_ACCEPTABLE'],
+                msg=ERROR_MESSAGES['NOT_ACCEPTABLE'],
+                data={},
+                status=HTTPStatus.NOT_ACCEPTABLE
+            )
         try:
             # 保存拓扑图并不改变设备列表
             load_dict = readJson(filepath)
@@ -58,18 +75,28 @@ class JtopoView(APIView):
             print('完成拓扑图修改的保存')
             # 检查拓扑图文件中的子拓扑节点
             if not checkNode(load_dict):
-                res['code'] = -1
-                res['msg'] = '创建子拓扑图失败'
-                return JsonResponse(res, status=status.HTTP_406_NOT_ACCEPTABLE)
+                # 创建子拓扑图失败
+                return CustomResponse(
+                    code=ERROR_CODES['NOT_ACCEPTABLE'],
+                    msg=ERROR_MESSAGES['NOT_ACCEPTABLE'],
+                    data={},
+                    status=HTTPStatus.NOT_ACCEPTABLE
+                )
             writeJson(load_dict, filepath)  # 完成拓扑文件的保存
             # res['data'] = readJson(filepath)
-            res['data'] = load_dict
+            # res['data'] = load_dict
         except Exception as e:
             print(e)
-            res['code'] = -1
-            res['msg'] = '保存网络拓扑失败'
-            return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return JsonResponse(res)
+            # 保存网络拓扑失败
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=str(e),
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+        return CustomResponse(
+            data=load_dict
+        )
 
 
 # 实现与前端交互jtopo的网络拓扑json文件,包括读取和写入json文件

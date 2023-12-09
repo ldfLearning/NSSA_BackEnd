@@ -5,8 +5,12 @@ from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.views import APIView
 
+from http import HTTPStatus
+from response import CustomResponse, ERROR_CODES, ERROR_MESSAGES
+
 from asset_management.tools.jtopotools import *
 from asset_management.models import *
+from rest_framework.response import Response
 
 # 自动生成拓扑图的逻辑如下：
 # 首先根据用户输入的网段10.12.189.0/24划分成8个子网段，分别为10.12.189.0/27,10.12.189.32/27，......
@@ -30,7 +34,6 @@ dicts = {}
 class JtopoAutoView(APIView):
     # 自动生成拓扑图的post请求
     def post(self, request):
-        res = {'code': 200, 'msg': '生成网络拓扑成功', 'data': {}}
         net = json.loads(request.body)['net']
         ips = IP(net)
         # 接受的网段类似为10.12.189.0/24
@@ -42,9 +45,13 @@ class JtopoAutoView(APIView):
         querySet = Asset.objects.filter(ip__startswith=netHeader)
         # 如果没有，则返回消息
         if len(querySet) == 0:
-            res['code'] = -1
-            res['msg'] = '没有ip在该网段中'
-            return JsonResponse(res, status=status.HTTP_412_PRECONDITION_FAILED)
+            # 没有ip在该网段中
+            return CustomResponse(
+                code=ERROR_CODES['PRECONDITION_FAILED'],
+                msg=ERROR_MESSAGES['PRECONDITION_FAILED'],
+                data={},
+                status=HTTPStatus.PRECONDITION_FAILED
+            )
         # 分成八个子网
         subnets = []
         topoIDs = {}  # 存放子拓扑图的拓扑id，就是在生成子拓扑节点时生成的nodeId
@@ -74,9 +81,13 @@ class JtopoAutoView(APIView):
             writeJson(load_dict, mainFilepath)
         except Exception as e:
             print(e)
-            res['code'] = -1
-            res['msg'] = '生成主拓扑图失败'
-            return JsonResponse(res, status=status.HTTP_406_NOT_ACCEPTABLE)
+            # 生成主拓扑图失败
+            return CustomResponse(
+                code=ERROR_CODES['NOT_ACCEPTABLE'],
+                msg=ERROR_MESSAGES['NOT_ACCEPTABLE'],
+                data={},
+                status=HTTPStatus.NOT_ACCEPTABLE
+            )
         try:
             assetlist = Asset.objects.all()  # 从数据库的主机表中获取主机信息
             for asset in assetlist:
@@ -103,11 +114,16 @@ class JtopoAutoView(APIView):
                 writeJson(dicts[subnet], filepath)
         except Exception as e:
             print(e)
-            print('生成拓扑节点出现错误')
-            res['code'] = -1
-            res['msg'] = '生成拓扑节点出现错误'
-            return JsonResponse(res, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return JsonResponse(res)
+            # 生成拓扑节点出现错误
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=str(e),
+                data={},
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
+        return CustomResponse(
+            data={}
+        )
 
 
 # def generateTopoDict(topo_id):  # 根据子网生成topo的字典

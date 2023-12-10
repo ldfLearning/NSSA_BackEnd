@@ -85,22 +85,22 @@ WSGI_APPLICATION = 'web.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-       'NAME': BASE_DIR / 'db.sqlite3',
-   }
-}
-
 # DATABASES = {
-#      'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'nssa-database',
-#         'USER': 'nssa',
-#         'PASSWORD': 'c317c317',
-#         'HOST': '222.20.126.128',
-#         'PORT': '3366',
-#     },
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+# }
+
+DATABASES = {
+     'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'nssa-database',
+        'USER': 'nssa',
+        'PASSWORD': 'c317c317',
+        'HOST': '172.16.44.141',
+        'PORT': '3366',
+    },
 #     'database_deskdevice': {
 #         'ENGINE': 'django.db.backends.mysql',
 #         'NAME': 'iNCManager',
@@ -108,7 +108,7 @@ DATABASES = {
 #         'PASSWORD': '12345',
 #         'HOST': '127.0.0.1',
 #     }
-# }
+}
     
 DATABASE_APPS_MAPPING = {
     # "user_manage": "default",

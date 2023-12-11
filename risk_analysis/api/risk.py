@@ -4,7 +4,7 @@ from response import CustomResponse, ERROR_CODES,ERROR_MESSAGES
 from risk_analysis.models import AssetRisk
 from risk_analysis.serializers import AssetRiskSerializer
 #假设其他组的模型表已经建好
-from asset_management.models import AssetService 
+from asset_management.models import AssetService,Asset
 from abnormal_attack.models import AbnormalTraffic,AbnormalHost,AbnormalUser
 
 class RiskAPIView(APIView):
@@ -65,7 +65,7 @@ class RiskCalculationAPIView(APIView):
         try:
             asset_id = request.data.get('asset_id') # 获取资产id
             asset_value = request.data.get('asset_value') # 获取资产价值
-            asset_ip = AssetService.objects.get(asset_id=asset_id).ip #从资产id里面获取资产ip，一个资产id只有一个资产ip
+            asset_ip = Asset.objects.get(id=asset_id).ip #从资产id里面获取资产ip，一个资产id只有一个资产ip
 
             #威胁性
             total_threat_value = 0

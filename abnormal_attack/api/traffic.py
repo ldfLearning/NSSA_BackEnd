@@ -166,9 +166,13 @@ class AbnormalTrafficDetailAPIView(APIView):
     # 删除记录
     def delete(self, request):
         try:
-            id = request.GET.get('id')
-            abnormal_traffic = self.get_object(id)
-            abnormal_traffic.delete()
+            # id = request.GET.get('id')
+            # abnormal_traffic = self.get_object(id)
+            # abnormal_traffic.delete()
+            ids = request.GET.get('id')
+            for id in ids.split(','):
+                abnormal_traffic = self.get_object(id)
+                abnormal_traffic.delete()
             return CustomResponse()
         except Exception as e:
             return CustomResponse(

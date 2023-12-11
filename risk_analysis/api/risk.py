@@ -64,7 +64,7 @@ class RiskCalculationAPIView(APIView):
     def post(self, request):
         try:
             asset_id = request.data.get('asset_id') # 获取资产id
-            asset_value = request.data.get('asset_value') # 获取资产价值
+            asset_value = int(request.data.get('asset_value')) # 获取资产价值
             asset_ip = Asset.objects.get(id=asset_id).ip #从资产id里面获取资产ip，一个资产id只有一个资产ip
 
             #威胁性

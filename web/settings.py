@@ -177,9 +177,9 @@ EMAIL_HOST = 'smtp.qq.com'
 # SMTP端口
 EMAIL_PORT = 25
 # 发送邮箱
-EMAIL_HOST_USER = ''
+EMAIL_HOST_USER = '1967113741@qq.com'
 # 发送邮箱授权码，非密码
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = 'lsizdbkctyulehgd'
 
 EMAIL_USE_TLS = True  # 是否使用TLS加密
 

@@ -162,19 +162,12 @@ class IncidentEventDetailAPIView(APIView):
         try:
             # 查询记录
             id = request.GET.get('id')
-            abnormal_warning = self.get_object(id)
-            # 校验数据
-            form = IncidentEventForm(request.data, instance=abnormal_warning)
-            if form.is_valid():
-                form.save()
-                return CustomResponse(data=form.cleaned_data)
-            else:
-                return CustomResponse(
-                    code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
-                    msg=ERROR_MESSAGES['INVALID_REQUEST'],
-                    data={},
-                    status=HTTPStatus.INTERNAL_SERVER_ERROR
-                )
+            incident_event = self.get_object(id)
+            # 修改保存
+            incident_event.finished = True
+            incident_event.save()
+            # 响应前端
+            return CustomResponse()
         except Exception as e:
             return CustomResponse(
                 code=ERROR_CODES['INTERNAL_SERVER_ERROR'],

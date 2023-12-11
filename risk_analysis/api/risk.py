@@ -88,7 +88,7 @@ class RiskCalculationAPIView(APIView):
 
             L = T + V
             F = asset_value * L
-            R = F * total_threat_value
+            R = F * (total_threat_value+vulnerability_value)
 
             data = {
                 'total_threat_value': total_threat_value,

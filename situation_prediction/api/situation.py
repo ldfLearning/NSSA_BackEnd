@@ -25,7 +25,7 @@ def load_predict_model(real_data, max_situ_value=5000, min_situ_value=1000):
 
 
 class SituationPredictionView(APIView):
-    throttle_scope = 'get_situation_prediction'  # 限制访问频率 一分钟一次
+    # throttle_scope = 'get_situation_prediction'  # 限制访问频率 一分钟一次
 
     def get(self, request):
         """

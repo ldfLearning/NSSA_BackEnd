@@ -81,11 +81,11 @@ def dealMessageEvents(topic, group_id, bootstrap_servers):
             traffic.save()
             # 记录日志
             traffic_log = IncidentEvent(
-                type='AbnormalAttackTraffic', ip=data.dst_ip, time=data.time, finished=False, detail=json.dumps(data)
+                type=0, ip=data.dst_ip, time=data.time, finished=False, detail=json.dumps(data.obj())
             )
             traffic_log.save()
             # 发送邮件
-            warning_msg = data.time+',  '+data.dst_ip+'的机器正在遭遇异常流量威胁，详细情况如下：'+data.detail
+            warning_msg = str(data.time)+',  '+data.dst_ip+'的机器正在遭遇异常流量威胁，详细情况如下：'+data.detail
             send_email_view(warning_msg)
 
         # 异常主机
@@ -96,11 +96,11 @@ def dealMessageEvents(topic, group_id, bootstrap_servers):
             traffic.save()
             # 记录日志
             host_log = IncidentEvent(
-                type='AbnormalAttackHost', ip=data.ip, time=data.time, finished=False, detail=json.dumps(data)
+                type=2, ip=data.ip, time=data.time, finished=False, detail=json.dumps(data.obj())
             )
             host_log.save()
             # 发送邮件
-            warning_msg = data.time+',  '+data.ip+'的机器存在异常主机行为，详细情况如下：'+data.detail
+            warning_msg = str(data.time)+',  '+data.ip+'的机器存在异常主机行为，详细情况如下：'+data.detail
             send_email_view(warning_msg)
 
         # 异常用户
@@ -111,11 +111,11 @@ def dealMessageEvents(topic, group_id, bootstrap_servers):
             traffic.save()
             # 记录日志
             user_log = IncidentEvent(
-                type='AbnormalAttackUser', ip=data.src_ip, time=data.time, finished=False, detail=json.dumps(data)
+                type=1, ip=data.src_ip, time=data.time, finished=False, detail=json.dumps(data.obj())
             )
             user_log.save()
              # 发送邮件
-            warning_msg = data.time+',  '+data.src_ip+'的机器存在异常用户行为，详细情况如下：'+data.topic
+            warning_msg = str(data.time)+',  '+data.src_ip+'的机器存在异常用户行为，详细情况如下：'+data.topic
             send_email_view(warning_msg)
 
 # 多线程任务

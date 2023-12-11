@@ -101,13 +101,14 @@ DATABASES = {
         'HOST': '172.16.44.141',
         'PORT': '3366',
     },
-#     'database_deskdevice': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'iNCManager',
-#         'USER': 'root',
-#         'PASSWORD': '12345',
-#         'HOST': '127.0.0.1',
-#     }
+    'database_deskdevice': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'iNCManager',
+        'USER': 'nssa',
+        'PASSWORD': 'c317c317',
+        'HOST': '172.16.44.141',
+        'PORT': '3366',
+    }
 }
     
 DATABASE_APPS_MAPPING = {
@@ -183,7 +184,7 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True  # 是否使用TLS加密
 
 # 添加一个变量，用于存储默认网卡的名称
-DEFAULT_NETWORK_INTERFACE = 'eno1'
+DEFAULT_NETWORK_INTERFACE = 'enp1s0'
 
 
 

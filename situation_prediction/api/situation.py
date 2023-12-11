@@ -35,12 +35,12 @@ class SituationPredictionView(APIView):
         try:
             situation_value = calculate_situation_value(predict_step)
             predict_result = load_predict_model(situation_value)
-        except:
-            return CustomResponse({"code": ERROR_CODES['PREDICTION_ERROR'], "msg": ERROR_MESSAGES['PREDICTION_ERROR'],
-                                   "data": {
-                                       "situation_value": None,
-                                       "predict_result": None
-                                   }})
+        except Exception as e:
+            return CustomResponse(code=ERROR_CODES['PREDICTION_ERROR'], msg=str(e),
+                                  data={
+                                      "situation_value": None,
+                                      "predict_result": None
+                                  })
         # 将结果存入数据库
         try:
             # 将situation_value和predict_result结果合并存入数据库
@@ -52,9 +52,9 @@ class SituationPredictionView(APIView):
                                   fifth_situation_value=situation_value[4],
                                   prediction_value=predict_result)
             situation.save()
-        except:
-            return CustomResponse({"code": ERROR_CODES['DATABASE_ERROR'], "msg": ERROR_MESSAGES['DATABASE_ERROR'],
-                                   "data": None})
+        except Exception as e:
+            return CustomResponse(code=ERROR_CODES['DATABASE_ERROR'], msg=str(e),
+                                  data={})
         return CustomResponse(data={
             "situation_value": situation_value,
             "predict_result": predict_result

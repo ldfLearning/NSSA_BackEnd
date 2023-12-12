@@ -70,7 +70,7 @@ class RiskCalculationAPIView(APIView):
             #威胁性
             total_threat_value = 0
             flow_count = AbnormalTraffic.objects.count()
-            ip_flows = AbnormalTraffic.objects.filter(src_ip=asset_ip)
+            ip_flows = AbnormalTraffic.objects.filter(dst_ip=asset_ip)
             ip_flows_count = ip_flows.count()
 
             #威胁出现频率(T)

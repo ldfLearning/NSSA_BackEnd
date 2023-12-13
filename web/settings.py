@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'incident_response',
     'asset_management',
     'situation_prediction',
-
+    'situation_events',
 ]
 
 MIDDLEWARE = [

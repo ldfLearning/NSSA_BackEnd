@@ -3,7 +3,7 @@
 import os
 import sys
 
-from msg_models import AbnormalTraffic, AbnormalHostMSG, AbnormalEventMSG
+from message import AbnormalTraffic, AbnormalHostMSG, AbnormalEventMSG
 
 def main():
     """Run administrative tasks."""

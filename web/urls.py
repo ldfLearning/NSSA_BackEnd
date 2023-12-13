@@ -25,4 +25,5 @@ urlpatterns = [
     path('api/flow_monitoring/', include('flow_monitoring.urls')),
     path('api/asset-management/', include('asset_management.urls')),
     path('api/situation_prediction/', include('situation_prediction.urls')),
+    path('api/situation_events/', include('situation_events.urls')),
 ]

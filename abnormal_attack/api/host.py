@@ -152,9 +152,13 @@ class AbnormalHostDetailAPIView(APIView):
     # 删除记录
     def delete(self, request):
         try:
-            id = request.GET.get('id')
-            abnormal_host = self.get_object(id)
-            abnormal_host.delete()
+            # id = request.GET.get('id')
+            # abnormal_host = self.get_object(id)
+            # abnormal_host.delete()
+            ids = request.GET.get('id')
+            for id in ids.split(','):
+                abnormal_host = self.get_object(id)
+                abnormal_host.delete()
             return CustomResponse()
         except Exception as e:
             return CustomResponse(

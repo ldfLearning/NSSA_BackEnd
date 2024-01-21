@@ -152,9 +152,13 @@ class AbnormalUserDetailAPIView(APIView):
     # 删除记录
     def delete(self, request):
         try:
-            id = request.GET.get('id')
-            abnormal_user = self.get_object(id)
-            abnormal_user.delete()
+            # id = request.GET.get('id')
+            # abnormal_user = self.get_object(id)
+            # abnormal_user.delete()
+            ids = request.GET.get('id')
+            for id in ids.split(','):
+                abnormal_user = self.get_object(id)
+                abnormal_user.delete()
             return CustomResponse()
         except Exception as e:
             return CustomResponse(

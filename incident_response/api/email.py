@@ -19,6 +19,22 @@ class EmailSettingsForm(forms.ModelForm):
         fields = '__all__'
 
 class EmailSettingsAPIView(APIView):
+    def get(self, request):
+        try:
+            email_settings = EmailSettings.objects.first()
+            email_recipient = ''
+            if email_settings:
+                email_recipient = email_settings.email_recipient
+            return CustomResponse(
+                data={
+                'email_recipient': email_recipient
+            })
+        except Exception as e:
+            return CustomResponse(
+                code=ERROR_CODES['INTERNAL_SERVER_ERROR'],
+                msg=str(e),
+                status=HTTPStatus.INTERNAL_SERVER_ERROR
+            )
     def post(self, request):
         try:
             # 修改设置或添加第一条数据

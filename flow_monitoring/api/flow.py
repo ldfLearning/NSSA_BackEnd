@@ -6,9 +6,10 @@ from rest_framework.views import APIView
 from django.conf import settings
 import psutil
 from collections import deque
+import time
 
-# 初始化历史的网络流量信息，使用队列存储最新的15条，在api维护流量值
-history_network_traffic = deque(maxlen=15)
+# 初始化历史的网络流量信息，使用队列存储最新的22条，在api维护流量值
+history_network_traffic = deque(maxlen=22)
 
 class FlowAPIView(APIView):
     def get_range_record(self,history_network_traffic,start_timestamp,end_timestamp):
@@ -35,6 +36,18 @@ class FlowAPIView(APIView):
 
             # 将当前包数量和记录时间存储
             history_network_traffic.append((record_time, packets))
+
+            # 添加短暂延迟
+            time.sleep(0.1)  # 延迟100毫秒
+
+            # 再次获取当前的网络流量信息
+            current_network_traffic = psutil.net_io_counters(pernic=True)
+            # 再次计算当前流量包数
+            packets2 = current_network_traffic[default_network_interface].packets_sent + current_network_traffic[default_network_interface].packets_recv
+            #  # 再次记录当前时间戳
+            # record_time = int(datetime.now().timestamp())
+             # 再次把包数量和记录时间存储
+            history_network_traffic.append((record_time, packets2))
 
             # print(history_network_traffic)
 
